@@ -1,10 +1,13 @@
-import { defineConfig } from 'vite-plugin-windicss'
+const defaultTheme = require('tailwindcss/defaultTheme')
 
-export default defineConfig({
-  darkMode: 'class',
-  plugins: [createEnterPlugin()],
+/** @type {import("@types/tailwindcss/tailwind-config").TailwindConfig } */
+module.exports = {
+  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['"Inter var"', ...defaultTheme.fontFamily.sans],
+      },
       screens: {
         sm: '576px',
         md: '768px',
@@ -14,14 +17,15 @@ export default defineConfig({
       },
     },
   },
-})
+  plugins: [createEnterPlugin()],
+}
 
 /**
  * Used for animation when the element is displayed.
  * @param maxOutput The larger the maxOutput output, the larger the generated css volume.
  */
 function createEnterPlugin(maxOutput = 5) {
-  const createCss = (index: number, d = 'x') => {
+  const createCss = (index, d = 'x') => {
     const upd = d.toUpperCase()
     return {
       [`*> .enter-${d}:nth-child(${index})`]: {

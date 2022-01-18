@@ -10,16 +10,13 @@
     "dev": "vite",
     "build": "cross-env NODE_ENV=production vite build && esno ./scripts/post-build.ts",
     "build:test": "cross-env vite build --mode test && esno ./scripts/post-build.ts",
-    "build:no-cache": "pnpm clean:cache && npm run build",
     "report": "cross-env REPORT=true npm run build",
     "type:check": "vue-tsc --noEmit --skipLibCheck",
     "preview": "npm run build && vite preview",
     "preview:dist": "vite preview",
-    "clean:cache": "rimraf node_modules/.cache/ && rimraf node_modules/.vite",
-    "clean:lib": "rimraf node_modules",
+    "clean": "rimraf node_modules",
     "server:gzip": "npx http-server dist --cors --gzip -c-1",
     "server:br": "npx http-server dist --cors --brotli -c-1",
-    "reinstall": "rimraf pnpm-lock.yaml && rimraf package.lock.json && rimraf node_modules && npm run bootstrap",
     "gen:icon": "esno ./scripts/generate-icon.ts"
   },
   "dependencies": {
@@ -80,6 +77,7 @@
     "esno": "^0.14.0",
     "less": "^4.1.2",
     "rollup-plugin-visualizer": "^5.5.4",
+    "tailwindcss": "^3.0.15",
     "vite": "^2.8.0-beta.2",
     "vite-plugin-compression": "^0.4.0",
     "vite-plugin-html": "^2.1.2",
@@ -91,7 +89,6 @@
     "vite-plugin-svg-icons": "^1.1.0",
     "vite-plugin-theme": "^0.8.1",
     "vite-plugin-vue-setup-extend": "^0.3.0",
-    "vite-plugin-windicss": "^1.6.3",
     "vue-tsc": "^0.30.5"
   },
   "repository": {

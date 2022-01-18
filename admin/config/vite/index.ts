@@ -2,7 +2,6 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import legacy from '@vitejs/plugin-legacy'
 import purgeIcons from 'vite-plugin-purge-icons'
-import windiCSS from 'vite-plugin-windicss'
 import VitePluginCertificate from 'vite-plugin-mkcert'
 import vueSetupExtend from 'vite-plugin-vue-setup-extend'
 import { configHtmlPlugin } from './html'
@@ -35,9 +34,6 @@ export const configVitePlugins = (viteEnv: ViteEnv, isBuild: boolean) => {
       source: 'coding',
     }),
   ]
-
-  // vite-plugin-windicss
-  vitePlugins.push(windiCSS())
 
   // @vitejs/plugin-legacy
   VITE_LEGACY && isBuild && vitePlugins.push(legacy())
