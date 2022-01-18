@@ -8,8 +8,8 @@
   "jsdelivr": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@vue/runtime-core": "^3.2.26",
-    "@vue/shared": "^3.2.26",
+    "@vue/runtime-core": "^3.2.27",
+    "@vue/shared": "^3.2.27",
     "@vueuse/core": "^7.5.3",
     "@vueuse/shared": "^7.5.3",
     "dayjs": "^1.10.7",

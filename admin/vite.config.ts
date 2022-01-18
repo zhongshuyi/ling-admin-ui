@@ -37,6 +37,7 @@ export default defineConfig(async ({ command, mode }) => {
       },
     },
     server: {
+      https: true,
       host: true,
       fs: {
         strict: true,
