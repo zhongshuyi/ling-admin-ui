@@ -1,5 +1,6 @@
+import { describe, test, expect } from 'vitest'
 describe('tests', () => {
-  it('should works', () => {
+  test('should works', () => {
     expect(1 + 1).toEqual(2)
   })
 })

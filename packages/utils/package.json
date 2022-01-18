@@ -7,6 +7,9 @@
   "unpkg": "index.js",
   "jsdelivr": "index.js",
   "license": "MIT",
+  "scripts": {
+    "clean": "rimraf node_modules"
+  },
   "dependencies": {
     "@vue/runtime-core": "^3.2.27",
     "@vue/shared": "^3.2.27",
@@ -17,5 +20,8 @@
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.5"
+  },
+  "optionalDependencies": {
+    "vue": "^3.2.27"
   }
 }

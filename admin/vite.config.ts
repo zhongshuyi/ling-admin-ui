@@ -101,13 +101,5 @@ export default defineConfig(async ({ command, mode }) => {
       exclude: ['vue-demi'],
     },
     plugins: configVitePlugins(viteEnv, command === 'build'),
-    // https://github.com/vitest-dev/vitest
-    test: {
-      include: ['tests/**/*.test.ts'],
-      environment: 'jsdom',
-      deps: {
-        inline: ['@vue', '@vueuse', 'vue-demi'],
-      },
-    },
   }
 })

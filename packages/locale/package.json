@@ -4,6 +4,12 @@
   "main": "index.ts",
   "module": "index.ts",
   "license": "MIT",
+  "scripts": {
+    "clean": "rimraf node_modules"
+  },
+  "optionalDependencies": {
+    "vue": "^3.2.27"
+  },
   "dependencies": {
     "@admin/setting": "workspace:*",
     "@admin/tokens": "workspace:*",

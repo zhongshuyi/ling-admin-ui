@@ -4,6 +4,9 @@
   "main": "index.ts",
   "module": "index.ts",
   "license": "MIT",
+  "scripts": {
+    "clean": "rimraf node_modules"
+  },
   "dependencies": {
     "@admin/types": "workspace:*",
     "@admin/tokens": "workspace:*"
