@@ -8,7 +8,7 @@
   "jsdelivr": "index.js",
   "license": "MIT",
   "scripts": {
-    "clean": "rimraf node_modules"
+    "clean": "pnpm rimraf node_modules"
   },
   "dependencies": {
     "@admin/utils": "workspace:*",

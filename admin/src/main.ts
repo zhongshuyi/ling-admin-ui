@@ -1,7 +1,6 @@
 import 'ant-design-vue/dist/antd.less'
 import './tailwind.css'
 import '@/styles/index.less'
-// import 'virtual:windi-utilities.css'
 // Register icon sprite
 import 'virtual:svg-icons-register'
 
