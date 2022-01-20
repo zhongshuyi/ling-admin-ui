@@ -89,20 +89,7 @@ const transform: AxiosTransform = {
 
   // 请求之前处理config
   beforeRequestHook: (config, options) => {
-    const {
-      apiUrl,
-      joinPrefix,
-      joinParamsToUrl,
-      formatDate,
-      joinTime = true,
-      urlPrefix,
-    } = options
-
-    if (joinPrefix) {
-      config.url = `${isString(urlPrefix) ? urlPrefix : urlPrefix?.()}${
-        config.url
-      }`
-    }
+    const { apiUrl, joinParamsToUrl, formatDate, joinTime = true } = options
 
     if (apiUrl) {
       const _apuUrl = isString(apiUrl)
@@ -239,8 +226,6 @@ const createAxios = (opt?: Partial<CreateAxiosOptions>) => {
         transform: clone(transform),
         // 配置项，下面的选项都可以在独立的接口请求中覆盖
         requestOptions: {
-          // 默认将prefix 添加到url
-          joinPrefix: true,
           // 是否返回原生响应头 比如：需要获取响应头时使用该属性
           isReturnNativeResponse: false,
           // 需要对返回数据进行处理
@@ -253,8 +238,6 @@ const createAxios = (opt?: Partial<CreateAxiosOptions>) => {
           errorMessageMode: 'message',
           // 接口地址
           apiUrl: () => context.apiUrl,
-          // 接口拼接地址
-          urlPrefix: () => context.urlPrefix,
           //  是否加入时间戳
           joinTime: true,
           // 忽略重复请求
@@ -274,6 +257,5 @@ export const defaultRequest = createAxios()
 // export const otherHttp = createAxios({
 //   requestOptions: {
 //     apiUrl: 'xxx',
-//     urlPrefix: 'xxx',
 //   },
 // });

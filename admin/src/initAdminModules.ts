@@ -34,10 +34,9 @@ const initDirective = async () => {
 
 const initService = async () => {
   const { createMessage, createErrorModal } = useMessage()
-  const { urlPrefix, apiUrl, uploadUrl } = getGlobalConfig()
+  const { apiUrl, uploadUrl } = getGlobalConfig()
   const { t } = useI18n()
   await initServiceModule({
-    urlPrefix,
     apiUrl,
     uploadUrl,
     getTokenFunction: () => {

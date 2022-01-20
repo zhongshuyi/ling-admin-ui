@@ -17,13 +17,8 @@ export default defineConfig(async ({ command, mode }) => {
   // The boolean type read by loadEnv is a string. This function can be converted to boolean type
   const viteEnv = wrapperEnv(env)
 
-  const {
-    VITE_PORT,
-    VITE_PUBLIC_PATH,
-    VITE_USE_MOCK,
-    VITE_PROXY,
-    VITE_DROP_CONSOLE,
-  } = viteEnv
+  const { VITE_PUBLIC_PATH, VITE_PROXY, VITE_USE_MOCK, VITE_DROP_CONSOLE } =
+    viteEnv
 
   return {
     root,
@@ -31,30 +26,37 @@ export default defineConfig(async ({ command, mode }) => {
     resolve: {
       alias: {
         '@/': `${resolve(__dirname, 'src')}/`,
-        '@service': `@admin/service/modules`,
         'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
         vue: 'vue/dist/vue.esm-bundler.js',
+        '@service': `@admin/service/modules`,
       },
     },
     server: {
+      port: 3000,
       https: true,
       host: true,
+      proxy: configProxy(VITE_PROXY),
       fs: {
         strict: true,
       },
-      port: VITE_PORT,
-      proxy: configProxy(VITE_PROXY),
+    },
+    esbuild: {
+      pure: VITE_DROP_CONSOLE ? ['console.log', 'debugger'] : [],
     },
     build: {
       target: 'chrome80',
       cssTarget: 'chrome80',
       outDir: OUTPUT_DIR,
-      terserOptions: {
-        compress: {
-          keep_infinity: true,
-          drop_console: VITE_DROP_CONSOLE,
-        },
-      },
+      /**
+       * 当 minify=“minify:'terser'” 解开注释
+       * Uncomment when minify="minify:'terser'"
+       */
+      // terserOptions: {
+      //   compress: {
+      //     keep_infinity: true,
+      //     drop_console: VITE_DROP_CONSOLE,
+      //   },
+      // },
       brotliSize: false,
       chunkSizeWarningLimit: 2048,
       rollupOptions: {

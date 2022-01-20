@@ -8,7 +8,6 @@ export interface ContextOptions {
   unauthorizedFunction: (msg?: string) => void
   timeoutFunction: () => void
   handleErrorFunction: (message?: string, mode?: ErrorMessageMode) => void
-  urlPrefix?: string
   apiUrl?: string
   uploadUrl?: string
 }
@@ -21,7 +20,6 @@ export let context: ContextOptions = {
   errorLogFunction: () => {},
   handleErrorFunction: () => {},
   timeoutFunction: () => {},
-  urlPrefix: '',
   apiUrl: '',
 }
 

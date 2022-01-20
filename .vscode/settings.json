@@ -112,7 +112,8 @@
     "styl",
     "unplugin",
     "unref",
-    "vitest"
+    "vitest",
+    "esbuild"
   ],
   "commentTranslate.multiLineMerge": true,
   "typescript.suggest.autoImports": false
