@@ -33,6 +33,10 @@
   "files.exclude": {
     "**/.cache": true,
     "**/.editorconfig": true,
+    "**/.eslintignore": true,
+    "**/.prettierignore": true,
+    "**/.stylelintignore": true,
+    "**/LICENSE": true,
     "**/.eslintcache": true,
     "**/bower_components": true,
     "**/.idea": true,

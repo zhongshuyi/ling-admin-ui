@@ -15,8 +15,8 @@
     "preview": "npm run build && vite preview",
     "preview:dist": "vite preview",
     "clean": "rimraf node_modules",
-    "server:gzip": "npx http-server dist --cors --gzip -c-1",
-    "server:br": "npx http-server dist --cors --brotli -c-1",
+    "server:gzip": "pnpx http-server dist --cors --gzip -c-1",
+    "server:br": "pnpx http-server dist --cors --brotli -c-1",
     "gen:icon": "esno ./scripts/generate-icon.ts"
   },
   "dependencies": {
@@ -34,7 +34,7 @@
     "@logicflow/extension": "^1.0.7",
     "@zxcvbn-ts/core": "^1.2.0",
     "ant-design-vue": "3.0.0-beta.7",
-    "codemirror": "^5.65.0",
+    "codemirror": "^5.65.1",
     "cropperjs": "^1.5.12",
     "echarts": "^5.2.2",
     "intro.js": "^4.3.0",

@@ -6,7 +6,6 @@ import {
   ContentLayoutEnum,
   PermissionModeEnum,
   ThemeEnum,
-  RouterTransitionEnum,
   SettingButtonPositionEnum,
   SessionTimeoutProcessingEnum,
   CacheTypeEnum,
@@ -70,17 +69,6 @@ export interface LocaleSetting {
   availableLocales: LocaleType[]
 }
 
-export interface TransitionSetting {
-  //  Whether to open the page switching animation
-  enable: boolean
-  // Route basic switching animation
-  basicTransition: RouterTransitionEnum
-  // Whether to open page switching loading
-  openPageLoading: boolean
-  // Whether to open the top progress bar
-  openNProgress: boolean
-}
-
 export interface ProjectConfig {
   // Storage location of permission related information
   permissionCacheType: CacheTypeEnum
@@ -115,8 +103,8 @@ export interface ProjectConfig {
   menuSetting: MenuSetting
   // Multi-tab settings
   multiTabsSetting: MultiTabsSetting
-  // Animation configuration
-  transitionSetting: TransitionSetting
+  // Whether to open the top progress bar
+  openNProgress: false
   // pageLayout whether to enable keep-alive
   openKeepAlive: boolean
   // Lock screen time

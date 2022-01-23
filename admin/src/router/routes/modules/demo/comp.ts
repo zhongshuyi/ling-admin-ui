@@ -248,14 +248,7 @@ const comp: RouteRecordItem = {
         },
       ],
     },
-    {
-      path: 'transition',
-      name: 'transitionDemo',
-      component: () => import('@/views/demo/comp/transition/index.vue'),
-      meta: {
-        title: t('routes.demo.comp.transition'),
-      },
-    },
+
     {
       path: 'cropper',
       name: 'CropperDemo',
