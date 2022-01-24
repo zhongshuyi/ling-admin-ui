@@ -1,5 +1,4 @@
 import 'ant-design-vue/dist/antd.less'
-import './tailwind.css'
 import '@/styles/index.less'
 // Register icon sprite
 import 'virtual:svg-icons-register'
@@ -8,13 +7,10 @@ import App from './App.vue'
 import { initAdminModules } from './initAdminModules'
 import { createApp } from 'vue'
 import { initAppConfigStore } from '@/logics/initAppConfig'
-import { setupErrorHandle } from '@/logics/error-handle'
 import { router, setupRouter } from '@/router'
 import { setupRouterGuard } from '@/router/guard'
 import { pinia, registerGlobalComponents } from '@/internal'
 import { setupI18n } from '@admin/locale'
-import { namespace } from '@admin/setting'
-import { createBEMPlugin } from '@admin/utils/bem'
 import { registerGlobalDirective } from '@admin/directives'
 
 const bootstrap = async () => {
@@ -25,8 +21,6 @@ const bootstrap = async () => {
   // ! Need to pay attention to the timing of execution
   // ! 需要注意调用时机
   await initAdminModules()
-
-  app.use(createBEMPlugin(namespace))
 
   // Initialize internal system configuration
   initAppConfigStore()
@@ -48,9 +42,6 @@ const bootstrap = async () => {
 
   // Register global directive
   registerGlobalDirective(app)
-
-  // Configure global error handling
-  setupErrorHandle(app)
 
   await router.isReady()
 

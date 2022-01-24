@@ -2,7 +2,6 @@ import type {
   ProjectConfig,
   HeaderSetting,
   MenuSetting,
-  TransitionSetting,
   MultiTabsSetting,
   BeforeMiniState,
 } from '@admin/types'
@@ -61,10 +60,6 @@ export const useAppStore = defineStore({
 
     getMenuSetting(): MenuSetting {
       return this.getProjectConfig.menuSetting
-    },
-
-    getTransitionSetting(): TransitionSetting {
-      return this.getProjectConfig.transitionSetting
     },
 
     getMultiTabsSetting(): MultiTabsSetting {

@@ -16,7 +16,6 @@ export default {
     scroll: '滚动组件',
     scrollBasic: '基础滚动',
     scrollAction: '滚动函数',
-    virtualScroll: '虚拟滚动',
 
     tree: 'Tree',
     treeBasic: '基础树',
@@ -26,14 +25,6 @@ export default {
     modal: '弹窗扩展',
     drawer: '抽屉扩展',
     desc: '详情组件',
-
-    lazy: '懒加载组件',
-    lazyBasic: '基础示例',
-    lazyTransition: '动画效果',
-
-    verify: '验证组件',
-    verifyDrag: '拖拽校验',
-    verifyRotate: '图片还原',
 
     qrcode: '二维码组件',
     strength: '密码强度组件',
@@ -70,14 +61,11 @@ export default {
     print: '打印',
     contextMenu: '右键菜单',
     download: '文件下载',
-    clickOutSide: 'ClickOutSide组件',
     imgPreview: '图片预览',
     copy: '剪切板',
     msg: '消息提示',
     watermark: '水印',
-    ripple: '水波纹',
     fullScreen: '全屏',
-    errorLog: '错误日志',
     tab: 'Tab带参',
     tab1: 'Tab带参1',
     tab2: 'Tab带参2',

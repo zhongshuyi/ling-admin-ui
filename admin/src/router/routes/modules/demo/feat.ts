@@ -140,14 +140,7 @@ const feat: RouteRecordItem = {
         title: t('routes.demo.feat.download'),
       },
     },
-    {
-      path: 'click-out-side',
-      name: 'ClickOutSideDemo',
-      component: () => import('@/views/demo/feat/click-out-side/index.vue'),
-      meta: {
-        title: t('routes.demo.feat.clickOutSide'),
-      },
-    },
+
     {
       path: 'img-preview',
       name: 'ImgPreview',
@@ -180,28 +173,13 @@ const feat: RouteRecordItem = {
         title: t('routes.demo.feat.watermark'),
       },
     },
-    {
-      path: 'ripple',
-      name: 'RippleDemo',
-      component: () => import('@/views/demo/feat/ripple/index.vue'),
-      meta: {
-        title: t('routes.demo.feat.ripple'),
-      },
-    },
+
     {
       path: 'full-screen',
       name: 'FullScreenDemo',
       component: () => import('@/views/demo/feat/full-screen/index.vue'),
       meta: {
         title: t('routes.demo.feat.fullScreen'),
-      },
-    },
-    {
-      path: '/error-log',
-      name: 'ErrorLog',
-      component: () => import('@/views/sys/error-log/index.vue'),
-      meta: {
-        title: t('routes.demo.feat.errorLog'),
       },
     },
     {

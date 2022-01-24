@@ -8,7 +8,6 @@ import type {
   CheckKeys,
   TreeActionType,
 } from './tree'
-
 import {
   defineComponent,
   reactive,
@@ -38,7 +37,6 @@ import {
   getSlot,
   createBEM,
 } from '@admin/utils'
-
 import { useTree } from './useTree'
 import { useContextMenu } from '@/hooks/web/useContextMenu'
 import { CreateContextOptions } from '@/components/ContextMenu'
@@ -294,7 +292,7 @@ export default defineComponent({
     })
 
     onMounted(() => {
-      const level = parseInt(props.defaultExpandLevel)
+      const level = parseInt(`${props.defaultExpandLevel}`)
       if (level > 0) {
         state.expandedKeys = filterByLevel(level)
       } else if (props.defaultExpandAll) {

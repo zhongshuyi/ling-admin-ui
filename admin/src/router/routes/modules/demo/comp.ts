@@ -411,14 +411,6 @@ const comp: RouteRecordItem = {
             title: t('routes.demo.comp.scrollAction'),
           },
         },
-        {
-          path: 'virtualScroll',
-          name: 'VirtualScrollDemo',
-          component: () => import('@/views/demo/comp/scroll/VirtualScroll.vue'),
-          meta: {
-            title: t('routes.demo.comp.virtualScroll'),
-          },
-        },
       ],
     },
 
@@ -447,60 +439,6 @@ const comp: RouteRecordItem = {
       },
     },
 
-    {
-      path: 'lazy',
-      name: 'LazyDemo',
-      component: getParentLayout(),
-      redirect: '/comp/lazy/basic',
-      meta: {
-        title: t('routes.demo.comp.lazy'),
-      },
-      children: [
-        {
-          path: 'basic',
-          name: 'BasicLazyDemo',
-          component: () => import('@/views/demo/comp/lazy/index.vue'),
-          meta: {
-            title: t('routes.demo.comp.lazyBasic'),
-          },
-        },
-        {
-          path: 'transition',
-          name: 'BasicTransitionDemo',
-          component: () => import('@/views/demo/comp/lazy/Transition.vue'),
-          meta: {
-            title: t('routes.demo.comp.lazyTransition'),
-          },
-        },
-      ],
-    },
-    {
-      path: 'verify',
-      name: 'VerifyDemo',
-      component: getParentLayout(),
-      redirect: '/comp/verify/drag',
-      meta: {
-        title: t('routes.demo.comp.verify'),
-      },
-      children: [
-        {
-          path: 'drag',
-          name: 'VerifyDragDemo',
-          component: () => import('@/views/demo/comp/verify/index.vue'),
-          meta: {
-            title: t('routes.demo.comp.verifyDrag'),
-          },
-        },
-        {
-          path: 'rotate',
-          name: 'VerifyRotateDemo',
-          component: () => import('@/views/demo/comp/verify/Rotate.vue'),
-          meta: {
-            title: t('routes.demo.comp.verifyRotate'),
-          },
-        },
-      ],
-    },
     //
 
     {

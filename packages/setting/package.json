@@ -10,5 +10,8 @@
   "dependencies": {
     "@admin/types": "workspace:*",
     "@admin/tokens": "workspace:*"
+  },
+  "optionalDependencies": {
+    "vue": "^3.2.29"
   }
 }

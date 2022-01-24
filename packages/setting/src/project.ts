@@ -152,9 +152,6 @@ export const projectSetting: ProjectConfig = {
   // Whether to show the breadcrumb icon
   showBreadCrumbIcon: false,
 
-  // Use error-handler-plugin
-  useErrorHandle: false,
-
   // Whether to open back to top
   useOpenBackTop: true,
 

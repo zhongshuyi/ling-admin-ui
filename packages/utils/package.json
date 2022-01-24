@@ -11,10 +11,11 @@
     "clean": "rimraf node_modules"
   },
   "dependencies": {
-    "@vue/runtime-core": "^3.2.27",
-    "@vue/shared": "^3.2.27",
-    "@vueuse/core": "^7.5.3",
-    "@vueuse/shared": "^7.5.3",
+    "@admin/setting": "workspace:*",
+    "@vue/runtime-core": "^3.2.29",
+    "@vue/shared": "^3.2.29",
+    "@vueuse/core": "^7.5.4",
+    "@vueuse/shared": "^7.5.4",
     "dayjs": "^1.10.7",
     "lodash-es": "^4.17.21"
   },
@@ -22,6 +23,6 @@
     "@types/lodash-es": "^4.17.5"
   },
   "optionalDependencies": {
-    "vue": "^3.2.27"
+    "vue": "^3.2.29"
   }
 }

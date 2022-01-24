@@ -113,8 +113,6 @@ export interface ProjectConfig {
   showBreadCrumb: boolean
   // Show breadcrumb icon
   showBreadCrumbIcon: boolean
-  // Use error-handler-plugin
-  useErrorHandle: boolean
   // Whether to open back to top
   useOpenBackTop: boolean
   // Is it possible to embed iframe pages
