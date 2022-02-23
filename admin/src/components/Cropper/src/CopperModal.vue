@@ -157,12 +157,21 @@ import { BasicModal, useModalInner } from '@/components/Modal'
 import { isFunction, dataURLtoBlob } from '@admin/utils'
 import { useI18n } from '@admin/locale'
 
-type apiFunParams = { file: Blob; name: string; filename: string }
+type apiFunParams = {
+  file: Blob
+  name: string
+  filename: string
+  data?: Record<string, any>
+}
 
 const props = {
   circled: { type: Boolean, default: true },
   uploadApi: {
     type: Function as PropType<(params: apiFunParams) => Promise<any>>,
+  },
+  data: {
+    type: Object as any,
+    default: {},
   },
 }
 
@@ -221,6 +230,7 @@ export default defineComponent({
         try {
           setModalProps({ confirmLoading: true })
           const result = await uploadApi({
+            data: props.data,
             name: 'file',
             file: blob,
             filename,

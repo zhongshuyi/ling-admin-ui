@@ -35,7 +35,7 @@ const ARow = Row
 const FormItem = Form.Item
 const InputPassword = Input.Password
 const { t } = useI18n()
-const { notification, createErrorModal } = useMessage()
+const { notification } = useMessage()
 const { prefixCls } = useDesign('login')
 const userStore = useUserStore()
 
@@ -47,8 +47,8 @@ const loading = ref(false)
 const rememberMe = ref(false)
 
 const formData = reactive({
-  account: 'vben',
-  password: '123456',
+  account: 'zhong',
+  password: 'admin123',
 })
 
 const { validForm } = useFormValid(formRef)
@@ -65,8 +65,10 @@ async function handleLogin() {
     const userInfo = await userStore.login({
       password: data.password,
       username: data.account,
-      mode: 'none', //不要默认的错误提示
+      mode: 'message', //不要默认的错误提示
     })
+    console.log(userInfo)
+
     if (userInfo) {
       notification.success({
         message: t('sys.login.loginSuccessTitle'),
@@ -75,13 +77,13 @@ async function handleLogin() {
       })
     }
   } catch (error) {
-    createErrorModal({
-      title: t('sys.api.errorTip'),
-      content:
-        (error as unknown as Error).message || t('sys.api.networkExceptionMsg'),
-      getContainer: () =>
-        document.body.querySelector(`.${prefixCls}`) || document.body,
-    })
+    // createErrorModal({
+    //   title: t('sys.api.errorTip'),
+    //   content:
+    //     (error as unknown as Error).message || t('sys.api.networkExceptionMsg'),
+    //   getContainer: () =>
+    //     document.body.querySelector(`.${prefixCls}`) || document.body,
+    // })
   } finally {
     loading.value = false
   }

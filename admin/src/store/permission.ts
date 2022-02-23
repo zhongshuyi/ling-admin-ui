@@ -16,7 +16,7 @@ import { PermissionModeEnum, PageEnum } from '@admin/tokens'
 import { asyncRoutes } from '@/router/routes'
 import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic'
 import { filterTree } from '@admin/utils'
-import { getMenuList } from '@service/sys/menu'
+import { getRouterList } from '@service/sys/menu'
 import { getPermCode } from '@service/sys/user'
 import { useMessage } from '@/hooks/web/useMessage'
 
@@ -180,7 +180,7 @@ export const usePermissionStore = defineStore({
           let routeList: RouteRecordItem[] = []
           try {
             this.changePermissionCode()
-            routeList = (await getMenuList()) as RouteRecordItem[]
+            routeList = (await getRouterList()) as RouteRecordItem[]
           } catch (error) {
             console.error(error)
           }

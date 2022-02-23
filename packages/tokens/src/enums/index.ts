@@ -38,6 +38,16 @@ export enum PermissionModeEnum {
   ROUTE_MAPPING = 'ROUTE_MAPPING',
 }
 
+//  Route switching animation
+export enum RouterTransitionEnum {
+  ZOOM_FADE = 'zoom-fade',
+  ZOOM_OUT = 'zoom-out',
+  FADE_SIDE = 'fade-slide',
+  FADE = 'fade',
+  FADE_BOTTOM = 'fade-bottom',
+  FADE_SCALE = 'fade-scale',
+}
+
 export enum RoleEnum {
   // super admin
   SUPER = 'super',
@@ -75,4 +85,59 @@ export enum ErrorTypeEnum {
   RESOURCE = 'resource',
   AJAX = 'ajax',
   PROMISE = 'promise',
+}
+
+/**
+ * 数据库内0代表true
+ */
+export enum BooleanValueEnum {
+  TRUE = 0,
+  FALSE = 1,
+}
+
+/**
+ * 菜单类型: 目录,菜单,按钮
+ */
+export enum MenuType {
+  DIRECTORY = 0,
+  MENU = 1,
+  BUTTON = 2,
+}
+
+/**
+ *状态 启用/禁用
+ */
+export enum Status {
+  /** 启用 */
+  ENABL = 0,
+  /** 禁用 */
+  DISABLE = 1,
+}
+
+/**
+ * 数据权限范围
+ */
+export enum DataScope {
+  /** 全部数据权限 */
+  ALL = 1,
+  /** 自定数据权限 */
+  CUSTOM = 2,
+  /** 本部门数据权限 */
+  DEPT = 3,
+  /** 本部门及以下数据权限 */
+  DEPT_AND_SUB = 4,
+  /** 仅本人数据权限 */
+  ME = 5,
+}
+
+/**
+ * 性别
+ */
+export enum Sex {
+  /** 男人 */
+  MAN = 0,
+  /** 女人 */
+  WOMAN = 1,
+  /** 未知 */
+  UNKNOWN = 3,
 }

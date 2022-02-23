@@ -9,6 +9,7 @@ import { VAxios } from './Axios'
 import { checkStatus } from './checkStatus'
 import { context } from '../_bridge'
 import { useI18n } from '@admin/locale'
+
 import {
   isString,
   isFunction,
@@ -63,9 +64,9 @@ const transform: AxiosTransform = {
     // 如果不希望中断当前请求，请return数据，否则直接抛出异常即可
     let timeoutMsg = ''
     switch (code) {
-      case ResultEnum.TIMEOUT:
-        timeoutMsg = t('sys.api.timeoutMessage')
-        context.timeoutFunction?.()
+      case ResultEnum.UNAUTHORIZED:
+        timeoutMsg = t('sys.api.errMsg401')
+        context.unauthorizedFunction?.(timeoutMsg)
         break
       default:
         if (message) {
@@ -90,7 +91,6 @@ const transform: AxiosTransform = {
   // 请求之前处理config
   beforeRequestHook: (config, options) => {
     const { apiUrl, joinParamsToUrl, formatDate, joinTime = true } = options
-
     if (apiUrl) {
       const _apuUrl = isString(apiUrl)
         ? apiUrl
@@ -175,7 +175,7 @@ const transform: AxiosTransform = {
     context.errorLogFunction?.(error)
     const { response, code, message, config } = error || {}
     const errorMessageMode = config?.requestOptions?.errorMessageMode || 'none'
-    const msg: string = response?.data?.error?.message ?? ''
+    const msg: string = response?.data?.message ?? ''
     const err: string = error?.toString?.() ?? ''
     let errMessage = ''
 
@@ -202,7 +202,7 @@ const transform: AxiosTransform = {
       throw new Error(error as unknown as string)
     }
 
-    checkStatus(error?.response?.status, msg, errorMessageMode)
+    checkStatus(error?.response?.data?.code, msg, errorMessageMode)
     return Promise.reject(error)
   },
 }

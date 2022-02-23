@@ -29,6 +29,7 @@
       @uploadSuccess="handleUploadSuccess"
       :uploadApi="uploadApi"
       :src="sourceValue"
+      :data="props.data"
     />
   </div>
 </template>
@@ -51,6 +52,13 @@ import { useI18n } from '@admin/locale'
 import type { ButtonProps } from '@/components/Button'
 import Icon from '@/components/Icon'
 
+type apiFunParams = {
+  file: Blob
+  name: string
+  filename: string
+  data?: Record<string, any>
+}
+
 const props = {
   width: { type: [String, Number], default: '200px' },
   value: { type: String },
@@ -58,8 +66,9 @@ const props = {
   btnProps: { type: Object as PropType<ButtonProps> },
   btnText: { type: String, default: '' },
   uploadApi: {
-    type: Function as PropType<({ file: Blob, name: string }) => Promise<void>>,
+    type: Function as PropType<(params: apiFunParams) => Promise<any>>,
   },
+  data: Object as any,
 }
 
 export default defineComponent({
@@ -111,6 +120,7 @@ export default defineComponent({
     expose({ openModal: openModal.bind(null, true), closeModal })
 
     return {
+      props,
       t,
       prefixCls,
       register,

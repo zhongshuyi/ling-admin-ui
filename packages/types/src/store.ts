@@ -34,11 +34,14 @@ export interface RoleInfo {
 }
 
 export interface UserInfo {
-  userId: string | number
+  id: string | number
   username: string
   realName: string
   avatar: string
   desc?: string
+  email: string
+  tel: string
+  sex: number
   homePath?: string
   roles: RoleInfo[]
 }

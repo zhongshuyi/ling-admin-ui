@@ -17,8 +17,13 @@ export default defineConfig(async ({ command, mode }) => {
   // The boolean type read by loadEnv is a string. This function can be converted to boolean type
   const viteEnv = wrapperEnv(env)
 
-  const { VITE_PUBLIC_PATH, VITE_PROXY, VITE_USE_MOCK, VITE_DROP_CONSOLE } =
-    viteEnv
+  const {
+    VITE_PORT,
+    VITE_PUBLIC_PATH,
+    VITE_PROXY,
+    VITE_USE_MOCK,
+    VITE_DROP_CONSOLE,
+  } = viteEnv
 
   return {
     root,
@@ -32,7 +37,7 @@ export default defineConfig(async ({ command, mode }) => {
       },
     },
     server: {
-      port: 3000,
+      port: VITE_PORT,
       https: true,
       host: true,
       proxy: configProxy(VITE_PROXY),
@@ -47,24 +52,12 @@ export default defineConfig(async ({ command, mode }) => {
       target: 'chrome80',
       cssTarget: 'chrome80',
       outDir: OUTPUT_DIR,
-      /**
-       * 当 minify=“minify:'terser'” 解开注释
-       * Uncomment when minify="minify:'terser'"
-       */
-      // terserOptions: {
-      //   compress: {
-      //     keep_infinity: true,
-      //     drop_console: VITE_DROP_CONSOLE,
-      //   },
-      // },
       brotliSize: false,
       chunkSizeWarningLimit: 2048,
       rollupOptions: {
         output: {
           manualChunks: {
             vue: ['vue', 'pinia', 'vue-router', '@vue/shared'],
-            // antdv: ['ant-design-vue'],
-            // icons: ['@ant-design/icons-vue'],
             echarts: ['echarts'],
             mockjs: ['mockjs'],
           },
@@ -73,7 +66,6 @@ export default defineConfig(async ({ command, mode }) => {
     },
     define: {
       __VITE_USE_MOCK__: VITE_USE_MOCK,
-      // Suppress vue-i18-next warning
       __INTLIFY_PROD_DEVTOOLS__: false,
       __APP_INFO__: JSON.stringify({
         pkg: { dependencies, devDependencies, name, version },
