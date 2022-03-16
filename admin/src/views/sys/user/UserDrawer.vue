@@ -16,6 +16,7 @@
           :data="{ id: model['id'] }"
           :showBtn="false"
           width="100"
+          @change="changAvatar(model['id'])"
         />
       </template>
     </BasicForm>
@@ -27,7 +28,15 @@ import { ref, computed, unref } from 'vue'
 import { BasicForm, useForm } from '@/components/Form/index'
 import { BasicDrawer, useDrawerInner } from '@/components/Drawer'
 import { formSchema } from './user.data'
-import { avatar } from '@admin/service/modules/sys/user'
+import { useUserStore } from '@/store/user'
+import {
+  addUser,
+  avatar,
+  editUser,
+  getUser,
+} from '@admin/service/modules/sys/user'
+
+const userStore = useUserStore()
 
 const emit = defineEmits(['success', 'register'])
 const isUpdate = ref(true)
@@ -46,8 +55,9 @@ const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(
     isUpdate.value = !!data?.isUpdate
 
     if (unref(isUpdate)) {
+      const user = await getUser(data.record.id)
       setFieldsValue({
-        ...data.record,
+        ...user,
       })
     }
   },
@@ -60,10 +70,26 @@ async function handleSubmit() {
     const values = await validate()
     setDrawerProps({ confirmLoading: true })
     console.log(values)
+    if (isUpdate.value) {
+      editUser(values).then(async () => {
+        if (userStore.getUserInfo?.id == values.id) {
+          await useUserStore().getUserInfoAction()
+        }
+      })
+    } else {
+      addUser(values)
+    }
     closeDrawer()
     emit('success')
   } finally {
     setDrawerProps({ confirmLoading: false })
   }
+}
+
+const changAvatar = async (id: number) => {
+  if (userStore.getUserInfo?.id == id) {
+    await useUserStore().getUserInfoAction()
+  }
+  console.log('上传完成')
 }
 </script>

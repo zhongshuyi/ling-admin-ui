@@ -7,6 +7,7 @@ enum Api {
   List = '/system/role/list',
   Perm = '/system/role/perm',
   DataScope = '/system/role/dataScope',
+  GetRoleIdsByUserId = '/system/role/getRoleIdsByUserId',
 }
 /**
  * 分页获取角色列表
@@ -15,6 +16,17 @@ enum Api {
  */
 export const getRoleListByPage = (params: BasicPageParams) => {
   return defaultRequest.get<Role[]>({ url: Api.Role, params })
+}
+
+/**
+ * 根据用户id查询角色id列表
+ * @param userId 用户信息
+ * @returns 角色id集合
+ */
+export const getRoleIdsByUserId = (userId: number) => {
+  return defaultRequest.get<number[]>({
+    url: Api.GetRoleIdsByUserId + '/' + userId,
+  })
 }
 
 /**

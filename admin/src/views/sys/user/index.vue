@@ -13,11 +13,6 @@
         <TableAction
           :actions="[
             {
-              icon: 'clarity:info-standard-line',
-              tooltip: '查看用户详情',
-              onClick: handleView.bind(null, record),
-            },
-            {
               icon: 'clarity:note-edit-line',
               tooltip: '编辑用户资料',
               onClick: handleEdit.bind(null, record),
@@ -35,7 +30,7 @@
         />
       </template>
     </BasicTable>
-    <UserDrawer @register="permRegisterDrawer" />
+    <UserDrawer @register="permRegisterDrawer" @success="success" />
   </PageWrapper>
 </template>
 <script lang="ts" setup name="User">
@@ -46,7 +41,7 @@ import UserDeptTree from './UserDeptTree.vue'
 import UserDrawer from './UserDrawer.vue'
 import { columns, searchFormSchema } from './user.data'
 import { reactive } from 'vue'
-import { getUserList } from '@service/sys/user'
+import { delUser, getUserList } from '@service/sys/user'
 
 const [permRegisterDrawer, { openDrawer }] = useDrawer()
 const [registerTable, { reload }] = useTable({
@@ -89,11 +84,10 @@ function handleEdit(record: Recordable) {
 }
 /** 删除按钮 */
 function handleDelete(record: Recordable) {
-  console.log(record)
+  delUser(record.id).then(() => {
+    reload()
+  })
 }
-
-/** 详情按钮 */
-function handleView(_record: Recordable) {}
 
 /** 携带的搜索参数 */
 const searchInfo = reactive<Recordable>({})
@@ -101,6 +95,10 @@ const searchInfo = reactive<Recordable>({})
 /** 选择部门后 */
 const handleSelect = (key: number) => {
   searchInfo.deptId = key
+  reload()
+}
+
+const success = () => {
   reload()
 }
 </script>

@@ -38,7 +38,7 @@ export default defineConfig(async ({ command, mode }) => {
     },
     server: {
       port: VITE_PORT,
-      https: true,
+      https: false,
       host: true,
       proxy: configProxy(VITE_PROXY),
       fs: {

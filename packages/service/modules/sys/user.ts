@@ -16,6 +16,7 @@ enum Api {
   GetPermCode = '/getPermCode',
   User = '/system/user',
   Avatar = '/basic-api/system/user/avatar',
+  CheckUsernameUnique = '/system/user/checkUsernameUnique',
 }
 
 /**
@@ -72,6 +73,15 @@ export function getUserList(params: UserQuery) {
 }
 
 /**
+ * 获取用户详细信息
+ * @param id 用户id
+ * @returns 用户信息
+ */
+export function getUser(id: number) {
+  return defaultRequest.get({ url: Api.User + '/' + id })
+}
+
+/**
  * 增加用户
  * @param params 用户信息
  * @returns 是否成功
@@ -95,7 +105,7 @@ export function editUser(params: User) {
  * @returns 是否删除成功
  */
 export function delUser(id: number) {
-  return defaultRequest.put({ url: Api.User + '/' + id })
+  return defaultRequest.delete({ url: Api.User + '/' + id })
 }
 
 type apiFunParams = {
@@ -114,5 +124,17 @@ export function avatar(params: apiFunParams) {
       url: Api.Avatar + '/' + params.data?.id,
     },
     params,
+  )
+}
+
+/**
+ * 检测用户名是否已注册
+ * @param username  用户名
+ * @returns true就是还未被注册
+ */
+export function checkUsernameUnique(username: string) {
+  return defaultRequest.get(
+    { url: Api.CheckUsernameUnique, params: { username } },
+    { errorMessageMode: 'none' },
   )
 }

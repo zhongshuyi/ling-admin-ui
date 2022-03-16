@@ -6,6 +6,7 @@ import { Sex } from '@admin/tokens'
 
 import { getList } from '@admin/service/modules/sys/role'
 import { getDeptList } from '@admin/service/modules/sys/dept'
+import { checkUsernameUnique } from '@service/sys/user'
 
 /**
  * 搜索表单
@@ -39,7 +40,8 @@ export const columns: BasicColumn[] = [
     dataIndex: 'avatar',
     customRender: ({ record }) => {
       return h(Avatar, {
-        src: (record as unknown as User).avatar,
+        src:
+          (record as unknown as User).avatar || '/src/assets/images/可莉.jpg',
         alt: 'User',
       })
     },
@@ -47,6 +49,12 @@ export const columns: BasicColumn[] = [
   {
     title: '性别',
     dataIndex: 'sex',
+    customRender: ({ record }) => {
+      const sex = (record as unknown as User).sex
+      const enable = ~~sex === 0
+      const text = enable ? '男' : '女'
+      return h('span', {}, text)
+    },
   },
 ]
 
@@ -63,6 +71,59 @@ export const formSchema: FormSchema[] = [
     required: true,
     dynamicDisabled: ({ values }) => {
       return !!values.id
+    },
+    rules: [
+      {
+        validator(_, value) {
+          return new Promise((resolve, reject) => {
+            if (!value) {
+              return reject('值不能为空')
+            }
+            checkUsernameUnique(value).then((r) => {
+              console.log(r)
+              if (r) {
+                resolve()
+              } else {
+                reject('用户名已存在')
+              }
+            })
+          })
+        },
+        trigger: 'blur',
+      },
+    ],
+  },
+  {
+    label: '登录密码',
+    field: 'password',
+    component: 'InputPassword',
+    ifShow: ({ values }) => {
+      return !values.id
+    },
+    rules: [{ required: true, message: '新增用户必须先设置密码' }],
+  },
+  {
+    label: '确认密码',
+    field: 'passwordRepeat',
+    component: 'InputPassword',
+    ifShow: ({ values }) => {
+      return !values.id
+    },
+    dynamicRules: ({ values }) => {
+      return [
+        {
+          required: true,
+          validator: (_, value) => {
+            if (!value) {
+              return Promise.reject('不能为空')
+            }
+            if (value !== values.password) {
+              return Promise.reject('两次输入的密码不一致!')
+            }
+            return Promise.resolve()
+          },
+        },
+      ]
     },
   },
   {
@@ -102,7 +163,7 @@ export const formSchema: FormSchema[] = [
     colProps: { span: 8 },
   },
   {
-    field: 'roles',
+    field: 'roleIds',
     label: '角色',
     component: 'ApiSelect',
     componentProps: {
@@ -113,10 +174,9 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
-    field: 'depts',
+    field: 'deptIds',
     component: 'ApiTreeSelect',
-    label: '远程下拉树',
-    required: true,
+    label: '部门',
     componentProps: {
       api: getDeptList,
       fieldNames: {

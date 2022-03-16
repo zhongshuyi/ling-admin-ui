@@ -5,6 +5,7 @@ enum Api {
   Dept = '/system/dept',
   CheckDeptHasChildren = '/system/dept/checkMenuHasChildren',
   DeptPerm = '/system/dept/DeptPerm',
+  GetDeptIdsByUserId = '/system/dept/getDeptIdsByUserId',
 }
 
 /**
@@ -13,6 +14,17 @@ enum Api {
  */
 export const getDeptList = () => {
   return defaultRequest.get<Dept[]>({ url: Api.Dept })
+}
+
+/**
+ * 根据用户id查询部门id列表
+ * @param userId 用户id
+ * @returns 部门id集合
+ */
+export const getDeptIdsByUserId = (userId: number) => {
+  return defaultRequest.get<number[]>({
+    url: Api.GetDeptIdsByUserId + '/' + userId,
+  })
 }
 
 /**
