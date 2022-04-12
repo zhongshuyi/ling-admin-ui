@@ -63,3 +63,11 @@ export type Params = {
   children?: Params[]
   showName?: string
 }
+
+export type PermissionUrl = {
+  id: number
+  menuId: number
+  description: string
+  url: string
+  method: string
+}

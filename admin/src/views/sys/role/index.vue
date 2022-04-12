@@ -9,11 +9,13 @@
           :actions="[
             {
               icon: 'clarity:note-edit-line',
+              tooltip: '编辑',
               onClick: handleEdit.bind(null, record),
               ifShow: record.id !== 1,
             },
             {
               icon: 'ant-design:delete-outlined',
+              tooltip: '删除',
               color: 'error',
               ifShow: record.id !== 1,
               popConfirm: {

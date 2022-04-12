@@ -55,7 +55,6 @@ export const columns: BasicColumn[] = [
   },
 ]
 
-const isDir = (type: Number) => type === MenuType.DIRECTORY
 const isMenu = (type: Number) => type === MenuType.MENU
 const isButton = (type: Number) => type === MenuType.BUTTON
 
@@ -91,7 +90,7 @@ export const formSchema: FormSchema[] = [
       options: [
         { label: '目录', value: MenuType.DIRECTORY },
         { label: '菜单', value: MenuType.MENU },
-        { label: '按钮', value: MenuType.BUTTON },
+        { label: '权限/按钮', value: MenuType.BUTTON },
       ],
     },
     colProps: { lg: 24, md: 24 },
@@ -106,6 +105,7 @@ export const formSchema: FormSchema[] = [
   {
     field: 'parentId',
     label: '上级菜单',
+    required: true,
     component: 'TreeSelect',
     componentProps: {
       fieldNames: {
@@ -151,7 +151,14 @@ export const formSchema: FormSchema[] = [
     field: 'perms',
     label: '权限标识',
     component: 'Input',
-    ifShow: ({ values }) => !isDir(values.menuType),
+    ifShow: ({ values }) => isButton(values.menuType),
+    dynamicRules: ({ values }) => {
+      if (isButton(values.menuType)) {
+        return [{ required: true }]
+      } else {
+        return []
+      }
+    },
   },
   {
     field: 'remark',
@@ -162,6 +169,7 @@ export const formSchema: FormSchema[] = [
     field: 'transitionName',
     label: '动画名',
     component: 'Input',
+    ifShow: ({ values }) => isMenu(values.menuType),
   },
   {
     field: 'frameSrc',
@@ -181,6 +189,7 @@ export const formSchema: FormSchema[] = [
         { label: '禁用', value: Status.DISABLE },
       ],
     },
+    ifShow: ({ values }) => isMenu(values.menuType),
   },
   {
     field: 'affix',
@@ -287,6 +296,13 @@ export const formSchema: FormSchema[] = [
     },
     ifShow: ({ values }) => isMenu(values.menuType),
   },
+  {
+    field: 'permission',
+    label: '权限选择',
+    component: 'Input',
+    slot: 'permissionUrl',
+    ifShow: ({ values }) => isButton(values.menuType),
+  },
 ]
 
 /**
@@ -297,14 +313,8 @@ export const filter = (
   query: MenuParams | undefined,
   result: GetMenuListResultModel,
 ) => {
-  const { t } = useI18n()
   menus.forEach((m) => {
-    m.showTitle = t(m.title)
-    if (
-      query?.title &&
-      (m.title.indexOf(query?.title) !== -1 ||
-        m.showTitle.indexOf(query?.title) !== -1)
-    ) {
+    if (query?.title && m.title.indexOf(query?.title) !== -1) {
       if (query?.status) {
         if (query?.status === m.status) {
           result.push(m)

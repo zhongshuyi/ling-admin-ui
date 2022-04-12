@@ -3,6 +3,7 @@ import type {
   GetRouterListResultModel,
   Menu,
   Params,
+  PermissionUrl,
 } from '../model'
 import { defaultRequest } from '../../request'
 
@@ -11,6 +12,8 @@ enum Api {
   Menu = '/system/menu',
   CheckMenuHasChildren = '/system/menu/checkMenuHasChildren',
   Perm = '/system/menu/getPerm',
+  GetAllUrl = '/system/menu/getAllPermissionUrl',
+  GetUrlList = '/system/menu/getPermissionUrlList',
 }
 
 /**
@@ -29,6 +32,22 @@ export const getRouterList = () => {
  */
 export const getMenuList = () => {
   return defaultRequest.get<GetMenuListResultModel>({ url: Api.Menu })
+}
+
+/**
+ * 获取所有接口路径及方法
+ * @returns 接口路径及方法集合
+ */
+export const getAllUrl = () => {
+  return defaultRequest.get<PermissionUrl[]>({ url: Api.GetAllUrl })
+}
+
+/**
+ * 获取所有接口路径及方法
+ * @returns 接口路径及方法集合
+ */
+export const getUrlList = (id: number) => {
+  return defaultRequest.get<PermissionUrl[]>({ url: Api.GetUrlList + '/' + id })
 }
 
 /**

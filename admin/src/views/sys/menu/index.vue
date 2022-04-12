@@ -9,11 +9,18 @@
           :actions="[
             {
               icon: 'clarity:note-edit-line',
+              tooltip: '编辑',
               onClick: handleEdit.bind(null, record),
+            },
+            {
+              icon: 'ant-design:plus-outlined',
+              tooltip: '增加下级',
+              onClick: handleAddSub.bind(null, record),
             },
             {
               icon: 'ant-design:delete-outlined',
               color: 'error',
+              tooltip: '删除',
               popConfirm: {
                 title: '是否确认删除',
                 confirm: handleDelete.bind(null, record),
@@ -87,7 +94,7 @@ const [registerTable, { reload, expandAll }] = useTable({
   showIndexColumn: false,
   canResize: false,
   actionColumn: {
-    width: 80,
+    width: 110,
     title: '操作',
     dataIndex: 'action',
     slots: { customRender: 'action' },
@@ -101,6 +108,16 @@ const [registerTable, { reload, expandAll }] = useTable({
 const handleCreate = () => {
   openDrawer(true, {
     isUpdate: false,
+  })
+}
+
+/**
+ * 点击添加菜单回调
+ */
+const handleAddSub = (record: Recordable) => {
+  openDrawer(true, {
+    isUpdate: false,
+    parentId: record.id,
   })
 }
 
@@ -141,8 +158,8 @@ const handleDelete = (record: Recordable) => {
           description: `删除成功`,
           duration: 3,
         })
+        reload()
       })
-      reload()
     }
   })
 }
