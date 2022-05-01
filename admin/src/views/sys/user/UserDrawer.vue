@@ -4,7 +4,7 @@
     @register="registerDrawer"
     showFooter
     :title="getTitle"
-    width="500px"
+    width="400px"
     @ok="handleSubmit"
     :closable="false"
   >
@@ -29,14 +29,17 @@ import { BasicForm, useForm } from '@/components/Form/index'
 import { BasicDrawer, useDrawerInner } from '@/components/Drawer'
 import { formSchema } from './user.data'
 import { useUserStore } from '@/store/user'
+import { useMessage } from '@/hooks/web/useMessage'
 import {
   addUser,
   avatar,
+  checkUsernameUnique,
   editUser,
   getUser,
 } from '@admin/service/modules/sys/user'
 
 const userStore = useUserStore()
+const { createMessage } = useMessage()
 
 const emit = defineEmits(['success', 'register'])
 const isUpdate = ref(true)
@@ -75,12 +78,21 @@ async function handleSubmit() {
         if (userStore.getUserInfo?.id == values.id) {
           await useUserStore().getUserInfoAction()
         }
+        closeDrawer()
+        emit('success')
       })
     } else {
-      addUser(values)
+      checkUsernameUnique(values).then((r) => {
+        if (r) {
+          addUser(values).then(async () => {
+            closeDrawer()
+            emit('success')
+          })
+        } else {
+          createMessage.error('用户名' + values.username + '已存在')
+        }
+      })
     }
-    closeDrawer()
-    emit('success')
   } finally {
     setDrawerProps({ confirmLoading: false })
   }

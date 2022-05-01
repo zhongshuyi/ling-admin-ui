@@ -9,7 +9,7 @@ export const schemas: FormSchema[] = [
     component: 'TreeSelect',
     componentProps: {
       fieldNames: {
-        title: 'showName',
+        title: 'deptName',
         key: 'id',
         value: 'id',
       },

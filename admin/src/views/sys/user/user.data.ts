@@ -6,7 +6,6 @@ import { Sex } from '@admin/tokens'
 
 import { getList } from '@admin/service/modules/sys/role'
 import { getDeptList } from '@admin/service/modules/sys/dept'
-import { checkUsernameUnique } from '@service/sys/user'
 
 /**
  * 搜索表单
@@ -72,26 +71,6 @@ export const formSchema: FormSchema[] = [
     dynamicDisabled: ({ values }) => {
       return !!values.id
     },
-    rules: [
-      {
-        validator(_, value) {
-          return new Promise((resolve, reject) => {
-            if (!value) {
-              return reject('值不能为空')
-            }
-            checkUsernameUnique(value).then((r) => {
-              console.log(r)
-              if (r) {
-                resolve()
-              } else {
-                reject('用户名已存在')
-              }
-            })
-          })
-        },
-        trigger: 'blur',
-      },
-    ],
   },
   {
     label: '登录密码',
@@ -144,7 +123,7 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
     rules: [
       {
-        required: false,
+        required: true,
         pattern: telRex,
         message: '必须是中国大陆手机号的格式',
       },

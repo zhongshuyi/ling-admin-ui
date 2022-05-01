@@ -5,7 +5,7 @@
     @register="registerDrawer"
     showFooter
     :title="'角色权限'"
-    width="500px"
+    width="400px"
     @ok="handleSubmit"
     :closable="false"
   >

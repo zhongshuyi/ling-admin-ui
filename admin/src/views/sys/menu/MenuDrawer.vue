@@ -8,11 +8,11 @@
     @ok="handleSubmit"
   >
     <BasicForm @register="registerForm">
-      <template #permissionUrl="{ model, field }">
+      <template #permissionUrl>
         <Select
           @change="selectApiChange"
           mode="multiple"
-          v-model:value="model[field]"
+          v-model:value="selectUrlIndex"
         >
           <SelectOption
             v-for="(item, index) in allUrl"
@@ -55,6 +55,8 @@ const isUpdate = ref(true)
 
 const allUrl = ref<PermissionUrl[]>([])
 
+const selectUrlIndex = ref<number[]>([])
+
 const selectUrl = ref<PermissionUrl[]>([])
 
 const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] =
@@ -66,15 +68,14 @@ const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] =
   })
 
 const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(
-  async (data) => {
+  async (data: any) => {
+    console.log(data?.parentId)
     resetFields()
     setDrawerProps({ confirmLoading: false })
     isUpdate.value = !!data?.isUpdate
-
     await getAllUrl().then(async (AllUrl) => {
       allUrl.value = AllUrl
-      data.record.permission = []
-      if (data.record.menuType === MenuType.BUTTON) {
+      if (data?.record?.menuType && data.record.menuType === MenuType.BUTTON) {
         await getUrlList(data.record.id).then((r) => {
           selectUrl.value = r
           for (let i = 0; i < r.length; i++) {
@@ -83,8 +84,7 @@ const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(
                 r[i].url === allUrl.value[j].url &&
                 r[i].method === allUrl.value[j].method
               ) {
-                console.log(allUrl.value[j].url)
-                data.record.permission.push(j)
+                selectUrlIndex.value.push(j)
               }
             }
           }
@@ -96,9 +96,7 @@ const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(
         ...data.record,
       })
     }
-    if (data?.parentId) {
-      setFieldsValue({ parentId: data?.parentId })
-    }
+
     const treeData = await getMenuList()
 
     treeData.push({
@@ -112,6 +110,10 @@ const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(
       field: 'parentId',
       componentProps: { treeData },
     })
+
+    if (data?.parentId) {
+      setFieldsValue({ parentId: data?.parentId })
+    }
   },
 )
 

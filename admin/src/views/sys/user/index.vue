@@ -1,9 +1,13 @@
 <template>
-  <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
-    <UserDeptTree class="w-1/4 xl:w-1/7" @select="handleSelect" />
+  <PageWrapper
+    dense
+    contentFullHeight
+    contentClass="flex flex-col lg:flex-row overflow-scroll"
+  >
+    <UserDeptTree class="w-full lg:w-1/6" @select="handleSelect" />
     <BasicTable
       @register="registerTable"
-      class="w-3/4 xl:w-6/7"
+      class="w-full lg:w-5/6"
       :searchInfo="searchInfo"
     >
       <template #toolbar>

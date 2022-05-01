@@ -1,13 +1,19 @@
 <template>
-  <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
+  <PageWrapper
+    dense
+    contentFullHeight
+    contentClass="flex flex-col lg:flex-row overflow-scroll"
+  >
     <DeptTree
-      class="w-2/5 xl:w-1/5"
+      class="w-full lg:w-1/5"
       @select="handleSelect"
       @handleAdd="handleAdd"
       :treeData="deptTreeData"
       @refreshData="fetch"
     />
-    <div class="relative w-3/5 p-4 m-4 bg-white xl:w-2/5">
+    <div
+      class="relative p-0 m-0 bg-white lg:p-4 lg:m-4 relativew-full lg:w-2/5"
+    >
       <ScrollContainer class="pr-10">
         <BasicTitle class="mb-4">部门信息</BasicTitle>
         <Empty v-show="deptId === -1" description="请先选择部门" />
@@ -19,7 +25,7 @@
         >
       </div>
     </div>
-    <PermissionsTree class="w-2/5 xl:w-2/5" :deptId="deptId" />
+    <PermissionsTree class="w-full lg:w-2/5" :deptId="deptId" />
     <DeptModel
       @register="registerModal"
       @fetch="fetch"
@@ -37,14 +43,13 @@ import { TreeItem } from '@/components/Tree'
 import { ScrollContainer } from '@/components/Container/index'
 import { Empty } from 'ant-design-vue'
 import { useModal } from '@/components/Modal'
-import { useI18n } from '@admin/locale/src/useI18n'
 
 import DeptTree from './deptTree.vue'
 import PermissionsTree from './permissionsTree.vue'
 import DeptModel from './deptModel.vue'
 
 import { schemas } from './dept.data'
-import { Dept, getDeptListResultModel } from '@service/model/sys/dept'
+import { Dept } from '@service/model/sys/dept'
 import { editDept, getDept, getDeptList } from '@service/sys/dept'
 
 const [
@@ -65,19 +70,7 @@ const deptTreeData = ref<any[]>([])
 const treeSlectData = ref<any[]>([])
 
 const fetch = async () => {
-  const { t } = useI18n()
-  const setShowTitle = (v: getDeptListResultModel) => {
-    if (!v) return
-    v.forEach((d) => {
-      d.showName = t(d.deptName)
-      // 判断是否是叶子节点
-      if (d.children !== undefined) {
-        setShowTitle(d.children)
-      }
-    })
-  }
   deptTreeData.value = (await getDeptList()) as unknown as TreeItem[]
-  setShowTitle(deptTreeData.value)
   setTreeSlectData()
 }
 
@@ -89,8 +82,7 @@ const setTreeSlectData = () => {
     {
       id: 0,
       parentId: 0,
-      title: '根部门',
-      showName: '根部门',
+      deptName: '根部门',
       orderNo: 0,
       children: deptTreeData.value,
     },
