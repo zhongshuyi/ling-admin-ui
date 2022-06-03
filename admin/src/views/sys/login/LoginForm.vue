@@ -1,21 +1,21 @@
 <script lang="ts" setup>
-import { reactive, ref, unref, computed } from 'vue'
+import { computed, reactive, ref, unref } from 'vue'
 
 import {
+  Button,
   Checkbox,
+  Col,
+  Divider,
   Form,
   Input,
   Row,
-  Col,
-  Button,
-  Divider,
 } from 'ant-design-vue'
 import {
-  GithubFilled,
-  WechatFilled,
   AlipayCircleFilled,
+  GithubFilled,
   GoogleCircleFilled,
   TwitterCircleFilled,
+  WechatFilled,
 } from '@ant-design/icons-vue'
 import LoginFormTitle from './LoginFormTitle.vue'
 
@@ -24,9 +24,9 @@ import { useMessage } from '@/hooks/web/useMessage'
 import { useUserStore } from '@/store/user'
 import {
   LoginStateEnum,
-  useLoginState,
   useFormRules,
   useFormValid,
+  useLoginState,
 } from './useLogin'
 import { useDesign } from '@/hooks/web/useDesign'
 
@@ -57,6 +57,14 @@ const { validForm } = useFormValid(formRef)
 
 const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN)
 
+const getURLParameters = (url) =>
+  (url.match(/([^?=&]+)(=([^&]*))/g) || []).reduce(
+    (a, v) => (
+      (a[v.slice(0, v.indexOf('='))] = v.slice(v.indexOf('=') + 1)), a
+    ),
+    {},
+  )
+
 async function handleLogin() {
   const data = await validForm()
   if (!data) return
@@ -66,9 +74,8 @@ async function handleLogin() {
       password: data.password,
       username: data.account,
       mode: 'message', //不要默认的错误提示
+      redirect: getURLParameters(window.location.href).redirect as string,
     })
-    console.log(userInfo)
-
     if (userInfo) {
       notification.success({
         message: t('sys.login.loginSuccessTitle'),

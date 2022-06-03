@@ -1,4 +1,34 @@
-import { FormSchema } from '@/components/Form/index'
+import { FormSchema } from '@/components/Form'
+import { BasicColumn } from '@/components/Table'
+
+export const columns: BasicColumn[] = [
+  {
+    title: '部门名称',
+    dataIndex: 'deptName',
+    width: 300,
+    align: 'left',
+  },
+  {
+    title: '排序',
+    dataIndex: 'orderNo',
+    width: 50,
+  },
+  {
+    title: '电话',
+    dataIndex: 'phone',
+    minWidth: 200,
+  },
+  {
+    title: '邮箱',
+    dataIndex: 'email',
+    minWidth: 200,
+  },
+  {
+    title: '负责人',
+    dataIndex: 'leader',
+    width: 100,
+  },
+]
 
 export const schemas: FormSchema[] = [
   { field: 'id', component: 'InputNumber', ifShow: false, label: 'id' },
@@ -9,7 +39,7 @@ export const schemas: FormSchema[] = [
     component: 'TreeSelect',
     componentProps: {
       fieldNames: {
-        title: 'deptName',
+        label: 'deptName',
         key: 'id',
         value: 'id',
       },

@@ -5,10 +5,11 @@ import { Role } from '../model/sys/role'
 enum Api {
   Role = '/system/role',
   List = '/system/role/list',
-  Perm = '/system/role/perm',
+  Perm = '/system/perm/role',
   DataScope = '/system/role/dataScope',
   GetRoleIdsByUserId = '/system/role/getRoleIdsByUserId',
 }
+
 /**
  * 分页获取角色列表
  * @param params 分页信息
@@ -30,8 +31,7 @@ export const getRoleIdsByUserId = (userId: number) => {
 }
 
 /**
- * 获取角色列表
- * @param params 分页信息
+ * 获取角色列表(下拉列表使用)
  * @returns 角色列表
  */
 export const getList = () => {
@@ -59,11 +59,11 @@ export const editRole = (params?: Role) => {
 /**
  * 修改角色状态
  * @param id 角色id
- * @param newstate 新的状态
+ * @param newState 新的状态
  * @returns 是否成功
  */
-export const stateChanges = (id?: number, newstate?: number) => {
-  return defaultRequest.put({ url: Api.Role + '/' + id + '/' + newstate })
+export const stateChanges = (id?: number, newState?: number) => {
+  return defaultRequest.put({ url: Api.Role + '/' + id + '/' + newState })
 }
 
 /**

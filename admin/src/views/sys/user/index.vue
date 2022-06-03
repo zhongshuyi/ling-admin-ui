@@ -39,7 +39,7 @@
 </template>
 <script lang="ts" setup name="User">
 import { PageWrapper } from '@/components/Page'
-import { BasicTable, useTable, TableAction } from '@/components/Table'
+import { BasicTable, TableAction, useTable } from '@/components/Table'
 import { useDrawer } from '@/components/Drawer'
 import UserDeptTree from './UserDeptTree.vue'
 import UserDrawer from './UserDrawer.vue'
@@ -78,14 +78,15 @@ function handleCreate() {
     isUpdate: false,
   })
 }
+
 /** 编辑按钮 */
 function handleEdit(record: Recordable) {
-  console.log(record)
   openDrawer(true, {
     record,
     isUpdate: true,
   })
 }
+
 /** 删除按钮 */
 function handleDelete(record: Recordable) {
   delUser(record.id).then(() => {

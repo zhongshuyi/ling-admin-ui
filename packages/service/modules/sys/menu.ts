@@ -11,7 +11,7 @@ enum Api {
   GetRouterList = '/getRouterList',
   Menu = '/system/menu',
   CheckMenuHasChildren = '/system/menu/checkMenuHasChildren',
-  Perm = '/system/menu/getPerm',
+  PermTree = '/system/perm/getPermTree',
   GetAllUrl = '/system/menu/getAllPermissionUrl',
   GetUrlList = '/system/menu/getPermissionUrlList',
 }
@@ -70,7 +70,7 @@ export const editMenu = (params?: Menu) => {
 
 /**
  * 删除菜单
- * @param ids 菜单id
+ * @param id 菜单id
  * @returns
  */
 export const delMenu = (id: number) => {
@@ -91,5 +91,5 @@ export const checkMenuHasChildren = (id: number) => {
  * @returns
  */
 export const getPerm = () => {
-  return defaultRequest.get<Params[]>({ url: Api.Perm })
+  return defaultRequest.get<Params[]>({ url: Api.PermTree })
 }

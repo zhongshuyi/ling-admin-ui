@@ -1,7 +1,7 @@
-import type { UserInfo, ErrorMessageMode } from '@admin/types'
+import type { ErrorMessageMode, UserInfo } from '@admin/types'
 
 import { defineStore } from 'pinia'
-import { RoleEnum, PageEnum } from '@admin/tokens'
+import { PageEnum, RoleEnum } from '@admin/tokens'
 import { isArray } from '@admin/utils'
 import { useI18n } from '@admin/locale'
 import { pinia } from '@/internal'
@@ -41,6 +41,7 @@ export const useUserStore = defineStore({
     sessionTimeout: false,
     // Last fetch time
     lastUpdateTime: 0,
+    //
   }),
   getters: {
     getUserInfo(): UserInfo {
@@ -86,26 +87,26 @@ export const useUserStore = defineStore({
       params: LoginParams & {
         goHome?: boolean
         mode?: ErrorMessageMode
+        redirect?: string
       },
     ): Promise<GetUserInfoModel | null> {
-      // try {
-      const { goHome = true, mode, ...loginParams } = params
+      const { goHome = true, mode, redirect, ...loginParams } = params
+      // 调用登录API
       const data = await loginApi(loginParams, mode)
 
       const { token } = data
-
       // save token
       this.setToken(token)
-      return this.afterLoginAction(goHome)
-      // } catch (error) {
-      // return Promise.reject(error)
-      // }
+      return this.afterLoginAction(goHome, redirect as string)
     },
-    async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
+    async afterLoginAction(
+      goHome?: boolean,
+      redirect?: string,
+    ): Promise<GetUserInfoModel | null> {
       if (!this.getToken) {
         return null
       }
-      // get user info
+      // 获取用户信息
       const userInfo = await this.getUserInfoAction()
 
       const sessionTimeout = this.sessionTimeout
@@ -121,8 +122,8 @@ export const useUserStore = defineStore({
           router.addRoute(PAGE_NOT_FOUND_ROUTE)
           permissionStore.setDynamicAddedRoute(true)
         }
-        goHome &&
-          (await router.replace(userInfo?.homePath || PageEnum.BASE_HOME))
+
+        goHome && (await router.replace(redirect || PageEnum.BASE_HOME))
       }
       return userInfo
     },
@@ -156,7 +157,7 @@ export const useUserStore = defineStore({
       this.setToken(undefined)
       this.setSessionTimeout(false)
       this.setUserInfo(null)
-      goLogin && router.push(PageEnum.BASE_LOGIN)
+      goLogin && (await router.push(PageEnum.BASE_LOGIN))
     },
 
     /**

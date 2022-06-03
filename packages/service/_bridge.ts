@@ -5,6 +5,7 @@ export interface ContextOptions {
   errorModalFunction: AnyFunction<any>
   getTokenFunction: () => unknown
   errorLogFunction: (error: any) => void
+  successFunction: (msg: string) => void
   unauthorizedFunction: (msg?: string) => void
   timeoutFunction: () => void
   handleErrorFunction: (message?: string, mode?: ErrorMessageMode) => void
@@ -16,6 +17,7 @@ export let context: ContextOptions = {
   getTokenFunction: () => undefined,
   unauthorizedFunction: () => {},
   errorFunction: () => {},
+  successFunction: () => {},
   errorModalFunction: () => {},
   errorLogFunction: () => {},
   handleErrorFunction: () => {},

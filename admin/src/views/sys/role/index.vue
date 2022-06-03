@@ -1,8 +1,12 @@
 <template>
-  <div>
+  <PageWrapper
+    dense
+    contentFullHeight
+    contentClass="flex flex-col lg:flex-row h-full p-4"
+  >
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增角色 </a-button>
+        <a-button type="primary" @click="handleCreate"> 新增角色</a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -44,11 +48,12 @@
     <RoleDrawer @register="registerDrawer" @success="handleSuccess" />
     <RolePermTree @register="permRegisterDrawer" />
     <DataScope @register="dataScopeRegisterDrawer" />
-  </div>
+  </PageWrapper>
 </template>
 <script lang="ts" name="RoleManagement" setup>
-import { BasicTable, useTable, TableAction } from '@/components/Table'
-import { getRoleListByPage } from '@admin/service/modules/sys/role'
+import { PageWrapper } from '@/components/Page'
+import { BasicTable, TableAction, useTable } from '@/components/Table'
+import { delRole, getRoleListByPage } from '@admin/service/modules/sys/role'
 
 import { useDrawer } from '@/components/Drawer'
 import RoleDrawer from './RoleDrawer.vue'
@@ -59,7 +64,7 @@ import { columns, searchFormSchema } from './role.data'
 
 const [registerDrawer, { openDrawer }] = useDrawer()
 const [permRegisterDrawer, { openDrawer: permOpenDrawer }] = useDrawer()
-const [dataScopeRegisterDrawer, { openDrawer: dataScopepermOpenDrawer }] =
+const [dataScopeRegisterDrawer, { openDrawer: dataScopePermOpenDrawer }] =
   useDrawer()
 
 const [registerTable, { reload }] = useTable({
@@ -74,6 +79,7 @@ const [registerTable, { reload }] = useTable({
   showTableSetting: true,
   bordered: true,
   showIndexColumn: false,
+  striped: false,
   actionColumn: {
     width: 120,
     title: '操作',
@@ -103,16 +109,19 @@ function handlePerm(record: Recordable) {
 }
 
 function handleDataScope(record: Recordable) {
-  dataScopepermOpenDrawer(true, {
+  dataScopePermOpenDrawer(true, {
     record,
   })
 }
 
 function handleDelete(record: Recordable) {
-  console.log(record)
+  delRole(record.id).then(() => reload())
 }
 
-function handleSuccess() {
+/**
+ * 增加/修改 表单提交后
+ */
+const handleSuccess = () => {
   reload()
 }
 </script>

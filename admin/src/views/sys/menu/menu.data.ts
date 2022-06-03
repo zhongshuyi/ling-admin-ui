@@ -1,9 +1,9 @@
 import { FormSchema } from '@/components/Form'
 import { BasicColumn } from '@/components/Table'
 import { useI18n } from '@admin/locale'
-import { Status, BooleanValueEnum, MenuType } from '@admin/tokens'
+import { BooleanValueEnum, MenuType, Status } from '@admin/tokens'
 import { Icon } from '@/components/Icon'
-import { MenuParams, Menu, GetMenuListResultModel } from '@service/model'
+import { GetMenuListResultModel, Menu, MenuParams } from '@service/model'
 import { Tag } from 'ant-design-vue'
 import { h } from 'vue'
 
@@ -47,7 +47,7 @@ export const columns: BasicColumn[] = [
     width: 80,
     customRender: ({ record }) => {
       const status = (record as unknown as Menu).status
-      const enable = ~~status === 0
+      const enable = ~~status === Status.ENABLE
       const color = enable ? 'green' : 'red'
       const text = enable ? '启用' : '停用'
       return h(Tag, { color: color }, () => text)
@@ -69,9 +69,10 @@ export const searchFormSchema: FormSchema[] = [
     field: 'status',
     label: '状态',
     component: 'Select',
+    defaultValue: Status.ENABLE,
     componentProps: {
       options: [
-        { label: '启用', value: Status.ENABL },
+        { label: '启用', value: Status.ENABLE },
         { label: '停用', value: Status.DISABLE },
       ],
     },
@@ -101,7 +102,6 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
     required: true,
   },
-
   {
     field: 'parentId',
     label: '上级菜单',
@@ -109,14 +109,13 @@ export const formSchema: FormSchema[] = [
     component: 'TreeSelect',
     componentProps: {
       fieldNames: {
-        title: 'showTitle',
+        label: 'title',
         key: 'id',
         value: 'id',
       },
       getPopupContainer: () => document.body,
     },
   },
-
   {
     field: 'orderNo',
     label: '排序',
@@ -182,10 +181,10 @@ export const formSchema: FormSchema[] = [
     field: 'status',
     label: '状态',
     component: 'RadioButtonGroup',
-    defaultValue: Status.ENABL,
+    defaultValue: Status.ENABLE,
     componentProps: {
       options: [
-        { label: '启用', value: Status.ENABL },
+        { label: '启用', value: Status.ENABLE },
         { label: '禁用', value: Status.DISABLE },
       ],
     },
@@ -205,7 +204,7 @@ export const formSchema: FormSchema[] = [
     ifShow: ({ values }) => isMenu(values.menuType),
   },
   {
-    field: 'isExt',
+    field: 'isLink',
     label: '是否外链',
     component: 'RadioButtonGroup',
     defaultValue: BooleanValueEnum.FALSE,
@@ -215,7 +214,7 @@ export const formSchema: FormSchema[] = [
         { label: '否', value: BooleanValueEnum.FALSE },
       ],
     },
-    ifShow: ({ values }) => isMenu(values.menuType),
+    ifShow: ({ values }) => isMenu(values.menuType) && values.parentId !== 0,
   },
 
   {

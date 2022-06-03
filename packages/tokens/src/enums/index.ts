@@ -65,6 +65,8 @@ export enum PageEnum {
   ERROR_PAGE = '/exception',
   // error log page path
   ERROR_LOG_PAGE = '/error-log/list',
+  // 个人中心路径
+  PERSONAL_CENTER = '/personalCenter',
 }
 
 export enum ComponentSizeEnum {
@@ -91,8 +93,8 @@ export enum ErrorTypeEnum {
  * 数据库内0代表true
  */
 export enum BooleanValueEnum {
-  TRUE = 0,
-  FALSE = 1,
+  TRUE = 1,
+  FALSE = 0,
 }
 
 /**
@@ -109,9 +111,9 @@ export enum MenuType {
  */
 export enum Status {
   /** 启用 */
-  ENABL = 0,
+  ENABLE = 1,
   /** 禁用 */
-  DISABLE = 1,
+  DISABLE = 0,
 }
 
 /**
@@ -140,4 +142,9 @@ export enum Sex {
   WOMAN = 1,
   /** 未知 */
   UNKNOWN = 3,
+}
+
+export enum UserIdentity {
+  EMPLOYEES = 0,
+  SUPERIOR = 1,
 }

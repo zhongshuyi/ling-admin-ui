@@ -3,7 +3,7 @@ import type { Router } from 'vue-router'
 import { usePermissionStoreWithOut } from '@/store/permission'
 import { PageEnum } from '@admin/tokens'
 import { useUserStoreWithOut } from '@/store/user'
-import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic'
+import { PAGE_NOT_FOUND_ROUTE, PERSONAL_CENTER } from '@/router/routes/basic'
 import { RootRoute } from '@/router/routes'
 
 const LOGIN_PATH = PageEnum.BASE_LOGIN
@@ -29,12 +29,13 @@ export function createPermissionGuard(router: Router) {
 
     const token = userStore.getToken
 
-    // Whitelist can be directly entered
+    // 可直接进入白名单
     if (whitePathList.includes(to.path as PageEnum)) {
       if (to.path === LOGIN_PATH && token) {
         const isSessionTimeout = userStore.getSessionTimeout
         try {
-          await userStore.afterLoginAction()
+          await userStore.afterLoginAction(true)
+          // 如果登录没过期,直接跳转至重定向页面
           if (!isSessionTimeout) {
             next((to.query?.redirect as string) || '/')
             return
@@ -72,7 +73,7 @@ export function createPermissionGuard(router: Router) {
       return
     }
 
-    // Jump to the 404 page after processing the login
+    // 处理登录后跳转到404页面
     if (
       from.path === LOGIN_PATH &&
       to.name === PAGE_NOT_FOUND_ROUTE.name &&
@@ -82,7 +83,7 @@ export function createPermissionGuard(router: Router) {
       return
     }
 
-    // get userinfo while last fetch time is empty
+    // 当上次读取时间为空时，获取userinfo
     if (userStore.getLastUpdateTime === 0) {
       try {
         await userStore.getUserInfoAction()
@@ -103,7 +104,9 @@ export function createPermissionGuard(router: Router) {
       router.addRoute(route)
     })
 
+    console.log('添加个人路由')
     router.addRoute(PAGE_NOT_FOUND_ROUTE)
+    router.addRoute(PERSONAL_CENTER)
 
     permissionStore.setDynamicAddedRoute(true)
 
@@ -113,6 +116,7 @@ export function createPermissionGuard(router: Router) {
     } else {
       const redirectPath = (from.query.redirect || to.path) as string
       const redirect = decodeURIComponent(redirectPath)
+      console.log(redirectPath, redirect)
       const nextData =
         to.path === redirect ? { ...to, replace: true } : { path: redirect }
       next(nextData)

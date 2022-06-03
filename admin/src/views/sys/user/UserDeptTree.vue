@@ -13,11 +13,9 @@
   </div>
 </template>
 <script lang="ts" setup name="UserDeptTree">
-import { ref, unref, nextTick, watch, onMounted } from 'vue'
+import { nextTick, onMounted, ref, unref, watch } from 'vue'
 
-import { BasicTree, TreeItem, TreeActionType } from '@/components/Tree'
-import { useI18n } from '@admin/locale/src/useI18n'
-import { getDeptListResultModel } from '@service/model/sys/dept'
+import { BasicTree, TreeActionType, TreeItem } from '@/components/Tree'
 import { getDeptList } from '@service/sys/dept'
 
 const emit = defineEmits(['select'])
@@ -35,19 +33,7 @@ const handleSelect = (keys) => {
 }
 
 const fetch = async () => {
-  const { t } = useI18n()
-  const setShowTitle = (v: getDeptListResultModel) => {
-    if (!v) return
-    v.forEach((d) => {
-      d.showName = t(d.deptName)
-      // 判断是否是叶子节点
-      if (d.children !== undefined) {
-        setShowTitle(d.children)
-      }
-    })
-  }
   treeData.value = (await getDeptList()) as unknown as TreeItem[]
-  setShowTitle(treeData.value)
 }
 
 onMounted(() => {

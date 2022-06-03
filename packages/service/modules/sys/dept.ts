@@ -1,10 +1,11 @@
 import { defaultRequest } from '../../request'
 import { Dept } from '../model/sys/dept'
+import { BasicPageParams } from '../model'
 
 enum Api {
   Dept = '/system/dept',
-  CheckDeptHasChildren = '/system/dept/checkMenuHasChildren',
-  DeptPerm = '/system/dept/DeptPerm',
+  CheckDeptHasChildren = '/system/dept/checkDeptHasChildren',
+  DeptPerm = '/system/perm/deptPerm',
   GetDeptIdsByUserId = '/system/dept/getDeptIdsByUserId',
 }
 
@@ -31,8 +32,16 @@ export const getDeptIdsByUserId = (userId: number) => {
  * 获得部门详细信息
  * @returns
  */
-export const getDept = (id: number) => {
-  return defaultRequest.get<Dept[]>({ url: Api.Dept + '/' + id })
+export const getDept = (id: Number) => {
+  return defaultRequest.get<Dept>({ url: Api.Dept + '/' + id })
+}
+
+/**
+ * 获得下级部门列表
+ * @returns
+ */
+export const getSubDeptList = (params: BasicPageParams) => {
+  return defaultRequest.get<Dept>({ url: Api.Dept, params })
 }
 
 /**
@@ -54,7 +63,7 @@ export const editDept = (params?: Dept) => {
 
 /**
  * 删除部门
- * @param ids 部门id
+ * @param id 部门id
  * @returns
  */
 export const delDept = (id: number) => {
@@ -80,9 +89,13 @@ export const getDeptPerm = (id: number | undefined) => {
 }
 /**
  * 设置部门权限
- * @param ids
+ * @param deptId 部门id
+ * @param permIds 新的权限id集合
  * @returns
  */
-export const setDeptPerm = (id: number | undefined, ids) => {
-  return defaultRequest.put({ url: Api.DeptPerm + '/' + id, params: ids })
+export const setDeptPerm = (deptId: Number, permIds: Number[]) => {
+  return defaultRequest.put({
+    url: Api.DeptPerm + '/' + deptId,
+    params: permIds,
+  })
 }

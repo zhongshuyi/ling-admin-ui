@@ -11,14 +11,14 @@ import { context } from '../_bridge'
 import { useI18n } from '@admin/locale'
 
 import {
-  isString,
-  isFunction,
   clone,
   deepMerge,
+  isFunction,
+  isString,
   setObjToUrlParams,
 } from '@admin/utils'
-import { RequestEnum, ResultEnum, ContentTypeEnum } from '@admin/tokens'
-import { joinTimestamp, formatRequestDate } from './helper'
+import { ContentTypeEnum, RequestEnum, ResultEnum } from '@admin/tokens'
+import { formatRequestDate, joinTimestamp } from './helper'
 
 /**
  * @description: 数据处理，方便区分多种处理方式
@@ -57,6 +57,9 @@ const transform: AxiosTransform = {
     const hasSuccess =
       data && Reflect.has(data, 'code') && code === ResultEnum.SUCCESS
     if (hasSuccess) {
+      if (res.config.method?.toUpperCase() != RequestEnum.GET) {
+        context.successFunction(message)
+      }
       return result
     }
 
@@ -81,8 +84,6 @@ const transform: AxiosTransform = {
         title: t('sys.api.errorTip'),
         content: timeoutMsg,
       })
-    } else if (options.errorMessageMode === 'message') {
-      context.errorFunction(timeoutMsg)
     }
 
     throw new Error(timeoutMsg || t('sys.api.apiRequestFailed'))
@@ -164,6 +165,9 @@ const transform: AxiosTransform = {
    * @description: 响应拦截器处理
    */
   responseInterceptors: (res: AxiosResponse<any>) => {
+    if (res.status === 200 && res.data.code !== 200) {
+      context.errorFunction(res.data.message)
+    }
     return res
   },
 

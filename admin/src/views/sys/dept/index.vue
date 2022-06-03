@@ -4,127 +4,146 @@
     contentFullHeight
     contentClass="flex flex-col lg:flex-row overflow-scroll"
   >
-    <DeptTree
-      class="w-full lg:w-1/5"
-      @select="handleSelect"
-      @handleAdd="handleAdd"
-      :treeData="deptTreeData"
-      @refreshData="fetch"
-    />
-    <div
-      class="relative p-0 m-0 bg-white lg:p-4 lg:m-4 relativew-full lg:w-2/5"
+    <BasicTable
+      @register="registerTable"
+      class="m-4"
+      @fetch-success="onFetchSuccess"
     >
-      <ScrollContainer class="pr-10">
-        <BasicTitle class="mb-4">部门信息</BasicTitle>
-        <Empty v-show="deptId === -1" description="请先选择部门" />
-        <BasicForm v-show="deptId !== -1" @register="registerForm" />
-      </ScrollContainer>
-      <div v-show="deptId !== -1" class="absolute bottom-0 right-0">
-        <a-button @click="update" class="mb-2 mr-2" type="primary"
-          >提交</a-button
-        >
-      </div>
-    </div>
-    <PermissionsTree class="w-full lg:w-2/5" :deptId="deptId" />
-    <DeptModel
-      @register="registerModal"
-      @fetch="fetch"
-      :treeSlectData="treeSlectData"
-      :addDeptId="addDeptId"
-    />
+      <template #toolbar>
+        <a-button type="primary" @click="handleAdd">新增部门</a-button>
+      </template>
+      <template #action="{ record }">
+        <TableAction
+          :actions="[
+            {
+              icon: 'clarity:note-edit-line',
+              tooltip: '编辑用户资料',
+              onClick: handleEdit.bind(null, record),
+            },
+            {
+              icon: 'ant-design:plus-outlined',
+              tooltip: '增加下级',
+              onClick: handleAdd.bind(null, record.id),
+            },
+            {
+              icon: 'ant-design:lock-outlined',
+              tooltip: '部门权限',
+              onClick: handleDeptPerm.bind(null, record.id),
+            },
+            {
+              icon: 'ant-design:delete-outlined',
+              color: 'error',
+              tooltip: '删除此账号',
+              popConfirm: {
+                title: '是否确认删除',
+                confirm: handleDelete.bind(null, record),
+              },
+            },
+          ]"
+        />
+      </template>
+    </BasicTable>
+    <DeptDrawer @register="deptRegisterDrawer" @success="success" />
+    <DeptPermDrawer @register="deptPermRegisterDrawer" @success="success" />
   </PageWrapper>
 </template>
-<script lang="ts" setup name="Dept">
-import { ref, watch, onMounted } from 'vue'
+
+<script lang="ts" setup name="Test">
 import { PageWrapper } from '@/components/Page'
-import { BasicTitle } from '@/components/Basic/index'
-import { BasicForm, useForm } from '@/components/Form/index'
-import { TreeItem } from '@/components/Tree'
-import { ScrollContainer } from '@/components/Container/index'
-import { Empty } from 'ant-design-vue'
-import { useModal } from '@/components/Modal'
+import { BasicTable, TableAction, useTable } from '@/components/Table'
 
-import DeptTree from './deptTree.vue'
-import PermissionsTree from './permissionsTree.vue'
-import DeptModel from './deptModel.vue'
+import { useDrawer } from '@/components/Drawer'
+import DeptDrawer from './DeptDrawer.vue'
+import DeptPermDrawer from './DeptPermDrawer.vue'
 
-import { schemas } from './dept.data'
-import { Dept } from '@service/model/sys/dept'
-import { editDept, getDept, getDeptList } from '@service/sys/dept'
+import { columns } from './dept.data'
 
-const [
-  registerForm,
-  { updateSchema, setFieldsValue, getFieldsValue, validate },
-] = useForm({
-  labelWidth: 100,
-  schemas: schemas,
-  showActionButtonGroup: false,
+import { checkDeptHasChildren, delDept, getDeptList } from '@service/sys/dept'
+import { useMessage } from '@/hooks/web/useMessage'
+import { nextTick } from 'vue'
+
+const { createConfirm } = useMessage()
+
+const [deptRegisterDrawer, { openDrawer }] = useDrawer()
+const [deptPermRegisterDrawer, { openDrawer: openDeptPermDrawer }] = useDrawer()
+const [registerTable, { reload, getDataSource, expandAll }] = useTable({
+  title: '部门管理',
+  isTreeTable: true,
+  pagination: false,
+  striped: false,
+  api: getDeptList,
+  rowKey: 'id',
+  columns,
+  useSearchForm: false,
+  showTableSetting: true,
+  bordered: true,
+  handleSearchInfoFn(info) {
+    return info
+  },
+  actionColumn: {
+    width: 160,
+    title: '操作',
+    dataIndex: 'action',
+    slots: { customRender: 'action' },
+  },
 })
 
-const [registerModal, { openModal }] = useModal()
-
-const deptId = ref(-1)
-
-const deptTreeData = ref<any[]>([])
-
-const treeSlectData = ref<any[]>([])
-
-const fetch = async () => {
-  deptTreeData.value = (await getDeptList()) as unknown as TreeItem[]
-  setTreeSlectData()
-}
-
-/**
- * 设置部门选择器的数据.添加根部门
- */
-const setTreeSlectData = () => {
-  treeSlectData.value = [
-    {
-      id: 0,
-      parentId: 0,
-      deptName: '根部门',
-      orderNo: 0,
-      children: deptTreeData.value,
-    },
-  ]
-
-  updateSchema({
-    field: 'parentId',
-    componentProps: { treeData: treeSlectData.value },
+const handleAdd = (id = -1) => {
+  openDrawer(true, {
+    parentId: id,
+    deptTree: getDataSource(),
   })
 }
 
-const update = async () => {
-  if (await validate()) {
-    editDept(getFieldsValue() as Dept).then(() => {
-      fetch()
-    })
-  }
+/** 编辑按钮 */
+function handleEdit(record: Recordable) {
+  openDrawer(true, {
+    record,
+    isUpdate: true,
+  })
 }
 
-const addDeptId = ref<number>(0)
-
-const handleAdd = (id: number) => {
-  addDeptId.value = id
-  openModal()
-}
-
-const handleSelect = (selectId = -1) => {
-  deptId.value = selectId
-}
-
-watch(
-  () => deptId.value,
-  (n) => {
-    if (n !== -1) {
-      getDept(n).then((r) => {
-        setFieldsValue(r)
-      })
+/** 删除按钮 */
+function handleDelete(record: Recordable) {
+  checkDeptHasChildren(record.id).then((v) => {
+    let message = ''
+    if (v) {
+      message = '该部门有子部门,确认全部删除吗?'
+    } else {
+      message = '确认删除该部门吗'
     }
-  },
-)
+    createConfirm({
+      title: () => '提示',
+      content: () => message,
+      onOk: () => {
+        delDept(record.id).then(() => {
+          reload()
+        })
+      },
+      iconType: 'warning',
+      mask: true,
+      maskClosable: true,
+    })
+  })
+}
 
-onMounted(() => {
-  fetch()
-})
+function handleDeptPerm(deptId: number) {
+  openDeptPermDrawer(true, {
+    deptId,
+  })
+}
+
+const success = () => {
+  reload()
+}
+
+/**
+ * 加载成功后
+ */
+const onFetchSuccess = () => {
+  // 演示默认展开所有表项
+  nextTick(expandAll)
+}
 </script>
+
+<style lang="less" scoped></style>

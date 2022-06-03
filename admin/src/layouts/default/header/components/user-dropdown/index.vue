@@ -15,19 +15,17 @@
     <template #overlay>
       <Menu>
         <MenuItem
-          key="doc"
-          :text="t('layout.header.dropdownItemDoc')"
-          icon="ion:document-text-outline"
-          v-if="getShowDoc"
-          @click="handleMenuClick('doc')"
-        />
-        <MenuDivider v-if="getShowDoc" />
-        <MenuItem
           v-if="getUseLockPage"
           key="lock"
           :text="t('layout.header.tooltipLock')"
           icon="ion:lock-closed-outline"
           @click="handleMenuClick('lock')"
+        />
+        <MenuItem
+          key="personalCenter"
+          :text="'个人中心'"
+          icon="bx:bx-home"
+          @click="handleMenuClick('personalCenter')"
         />
         <MenuItem
           key="logout"
@@ -41,18 +39,18 @@
   <LockAction @register="register" />
 </template>
 <script lang="ts">
+import { useRouter } from 'vue-router'
 import { Dropdown, Menu } from 'ant-design-vue'
-import { defineComponent, computed } from 'vue'
-import { DOC_URL } from '@admin/setting'
+import { computed, defineComponent } from 'vue'
 import { useUserStore } from '@/store/user'
 import { useHeaderSetting } from '@/hooks/setting/useHeaderSetting'
 import { useI18n } from '@admin/locale'
 import { useDesign } from '@/hooks/web/useDesign'
 import { useModal } from '@/components/Modal'
 import headerImg from '@/assets/images/header.jpg'
-import { openWindow } from '@admin/utils'
 import MenuItem from './DropMenuItem.vue'
 import LockAction from '../lock/LockModal.vue'
+import { PageEnum } from '@admin/tokens'
 
 export default defineComponent({
   name: 'UserDropdown',
@@ -60,7 +58,6 @@ export default defineComponent({
     Dropdown,
     Menu,
     MenuItem,
-    MenuDivider: Menu.Divider,
     LockAction,
   },
   props: {
@@ -91,9 +88,11 @@ export default defineComponent({
       userStore.confirmLoginOut()
     }
 
-    // open doc
-    function openDoc() {
-      openWindow(DOC_URL)
+    // 个人中心跳转
+    const router = useRouter()
+
+    function handlePersonalCenter() {
+      router.push(PageEnum.PERSONAL_CENTER)
     }
 
     const handleMenuClick = (key: string) => {
@@ -101,11 +100,11 @@ export default defineComponent({
         case 'logout':
           handleLoginOut()
           break
-        case 'doc':
-          openDoc()
-          break
         case 'lock':
           handleLock()
+          break
+        case 'personalCenter':
+          handlePersonalCenter()
           break
       }
     }

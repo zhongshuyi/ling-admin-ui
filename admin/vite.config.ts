@@ -1,6 +1,6 @@
 import pkg from './package.json'
 import dayjs from 'dayjs'
-import { loadEnv, defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import { resolve } from 'path'
 import { OUTPUT_DIR, wrapperEnv } from './config'
 import { configProxy, configVitePlugins } from './config/vite'
@@ -17,13 +17,7 @@ export default defineConfig(async ({ command, mode }) => {
   // The boolean type read by loadEnv is a string. This function can be converted to boolean type
   const viteEnv = wrapperEnv(env)
 
-  const {
-    VITE_PORT,
-    VITE_PUBLIC_PATH,
-    VITE_PROXY,
-    VITE_USE_MOCK,
-    VITE_DROP_CONSOLE,
-  } = viteEnv
+  const { VITE_PORT, VITE_PUBLIC_PATH, VITE_PROXY, VITE_DROP_CONSOLE } = viteEnv
 
   return {
     root,
@@ -33,7 +27,7 @@ export default defineConfig(async ({ command, mode }) => {
         '@/': `${resolve(__dirname, 'src')}/`,
         'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
         vue: 'vue/dist/vue.esm-bundler.js',
-        '@service': `@admin/service/modules`,
+        '@service': '@admin/service/modules',
       },
     },
     server: {
@@ -59,13 +53,11 @@ export default defineConfig(async ({ command, mode }) => {
           manualChunks: {
             vue: ['vue', 'pinia', 'vue-router', '@vue/shared'],
             echarts: ['echarts'],
-            mockjs: ['mockjs'],
           },
         },
       },
     },
     define: {
-      __VITE_USE_MOCK__: VITE_USE_MOCK,
       __INTLIFY_PROD_DEVTOOLS__: false,
       __APP_INFO__: JSON.stringify({
         pkg: { dependencies, devDependencies, name, version },

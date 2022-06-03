@@ -9,7 +9,7 @@
     @ok="handleSubmit"
     :closable="false"
   >
-    <template #title>数据权限 </template>
+    <template #title>数据权限</template>
     <Descriptions class="ml-2" :column="1" :contentStyle="{ color: '#adb5bd' }">
       <DescriptionsItem label="角色名称">{{ role?.roleName }}</DescriptionsItem>
       <DescriptionsItem label="角色键名">{{ role?.roleKey }}</DescriptionsItem>
@@ -24,12 +24,12 @@
       <SelectOption :value="DataScope.CUSTOM">自定义数据权限</SelectOption>
       <SelectOption :value="DataScope.DEPT">本部门数据权限</SelectOption>
       <SelectOption :value="DataScope.DEPT_AND_SUB"
-        >本部门及下级部门数据权限</SelectOption
-      >
+        >本部门及下级部门数据权限
+      </SelectOption>
       <SelectOption :value="DataScope.ME">仅本人数据权限</SelectOption>
     </Select>
     <BasicTree
-      v-show="dataScope == DataScope.CUSTOM"
+      v-show="dataScope === DataScope.CUSTOM"
       class="mt-6 border"
       checkable
       clickRowToExpand
@@ -37,7 +37,7 @@
       :checkedKeys="checkedKeys"
       ref="dataScopeTreeRef"
       :treeData="treeData"
-      :fieldNames="{ key: 'id', title: 'showName' }"
+      :fieldNames="{ key: 'id', title: 'deptName' }"
       @check="onCheck"
     />
   </BasicDrawer>
@@ -46,14 +46,13 @@
 import { onMounted, ref, unref, watch } from 'vue'
 
 import { BasicDrawer, useDrawerInner } from '@/components/Drawer'
-import { BasicTree, TreeItem, TreeActionType } from '@/components/Tree'
-import { useI18n } from '@admin/locale/src/useI18n'
+import { BasicTree, TreeActionType, TreeItem } from '@/components/Tree'
 
 import {
-  Select,
-  SelectOption,
   Descriptions,
   DescriptionsItem,
+  Select,
+  SelectOption,
 } from 'ant-design-vue'
 
 import { getDeptList } from '@admin/service/modules/sys/dept'
@@ -106,18 +105,16 @@ const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(
  * 加载树结构数据
  */
 function fetch() {
-  const { t } = useI18n()
-  /**多语言翻译并做节点操作 */
-  const setShowTitle = (v: getDeptListResultModel) => {
+  /**处理结果 */
+  const toDealWith = (v: getDeptListResultModel) => {
     if (!v) return
     v.forEach((d) => {
-      d.showName = t(d.deptName)
       // 保存所有key
       allTreeKeys.value.push(d.id)
       // 判断是否是叶子节点
       if (d.children !== undefined) {
         keyLeafPairs.value.set(d.id, false)
-        setShowTitle(d.children)
+        toDealWith(d.children)
       } else {
         keyLeafPairs.value.set(d.id, true)
       }
@@ -125,7 +122,7 @@ function fetch() {
   }
   /**获取权限树结构 */
   getDeptList().then((r) => {
-    setShowTitle(r)
+    toDealWith(r)
     treeData.value = r as unknown as TreeItem[]
   })
 }

@@ -2,7 +2,7 @@ import { h } from 'vue'
 import { BasicColumn, FormSchema } from '@/components/Table'
 import { Avatar } from 'ant-design-vue'
 import { User } from '@service/model/sys/user'
-import { Sex } from '@admin/tokens'
+import { Sex, UserIdentity } from '@admin/tokens'
 
 import { getList } from '@admin/service/modules/sys/role'
 import { getDeptList } from '@admin/service/modules/sys/dept'
@@ -173,6 +173,34 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
     slot: 'avatar',
     ifShow: ({ values }) => !!values.id,
+  },
+  {
+    field: 'userIdentity',
+    label: '用户身份',
+    component: 'Select',
+    componentProps: {
+      options: [
+        { label: '员工', value: UserIdentity.EMPLOYEES },
+        { label: '上级', value: UserIdentity.SUPERIOR },
+      ],
+    },
+    colProps: { span: 8 },
+  },
+  {
+    field: 'departIds',
+    component: 'ApiTreeSelect',
+    label: '负责的部门',
+    componentProps: {
+      api: getDeptList,
+      fieldNames: {
+        children: 'children',
+        label: 'deptName',
+        key: 'id',
+        value: 'id',
+      },
+      multiple: true,
+    },
+    ifShow: ({ values }) => values.userIdentity === UserIdentity.SUPERIOR,
   },
   {
     label: '备注',

@@ -18,6 +18,9 @@ module.exports = {
     },
   },
   plugins: [createEnterPlugin()],
+  corePlugins: {
+    preflight: false,
+  },
 }
 
 /**
@@ -54,13 +57,13 @@ function createEnterPlugin(maxOutput = 5) {
     }
     addBase({
       ...addRawCss,
-      [`@keyframes enter-x-animation`]: {
+      ['@keyframes enter-x-animation']: {
         to: {
           opacity: '1',
           transform: 'translateX(0)',
         },
       },
-      [`@keyframes enter-y-animation`]: {
+      ['@keyframes enter-y-animation']: {
         to: {
           opacity: '1',
           transform: 'translateY(0)',

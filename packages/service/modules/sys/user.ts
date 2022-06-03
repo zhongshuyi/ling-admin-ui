@@ -1,10 +1,10 @@
 import type { ErrorMessageMode } from '@admin/types'
 import type {
+  GetUserInfoModel,
   LoginParams,
   LoginResultModel,
-  GetUserInfoModel,
-  UserQuery,
   User,
+  UserQuery,
 } from '../model'
 
 import { defaultRequest } from '../../request'
@@ -17,6 +17,9 @@ enum Api {
   User = '/system/user',
   Avatar = '/basic-api/system/user/avatar',
   CheckUsernameUnique = '/system/user/checkUsernameUnique',
+  PersonalCenter = '/personalCenter',
+  ItselfAvatar = '/personalCenter/avatar',
+  ChangePassword = '/personalCenter/password',
 }
 
 /**
@@ -100,10 +103,28 @@ export function editUser(params: User) {
 }
 
 /**
+ * 自己信息
+ * @param params 参数
+ * @returns 是否修改成功
+ */
+export function editItSelfUser(params: User) {
+  return defaultRequest.put({ url: Api.PersonalCenter, params })
+}
+
+/**
+ * 修改本用户密码
+ * @param params
+ */
+export function changePassword(params: any) {
+  return defaultRequest.put({ url: Api.ChangePassword, params })
+}
+
+/**
  * 删除用户
  * @param id 需要删除的用户id
  * @returns 是否删除成功
  */
+
 export function delUser(id: number) {
   return defaultRequest.delete({ url: Api.User + '/' + id })
 }
@@ -122,6 +143,18 @@ export function avatar(params: apiFunParams) {
   return defaultRequest.uploadFile(
     {
       url: Api.Avatar + '/' + params.data?.id,
+    },
+    params,
+  )
+}
+
+/**
+ * @description: 修改登录用户头像
+ */
+export function itselfAvatar(params: apiFunParams) {
+  return defaultRequest.uploadFile(
+    {
+      url: Api.ItselfAvatar,
     },
     params,
   )

@@ -35,19 +35,18 @@
 </template>
 <script lang="ts">
 import {
-  defineComponent,
   computed,
   CSSProperties,
-  unref,
-  ref,
-  watchEffect,
-  watch,
+  defineComponent,
   PropType,
+  ref,
+  unref,
+  watch,
+  watchEffect,
 } from 'vue'
 import CopperModal from './CopperModal.vue'
 import { useDesign } from '@/hooks/web/useDesign'
 import { useModal } from '@/components/Modal'
-import { useMessage } from '@/hooks/web/useMessage'
 import { useI18n } from '@admin/locale'
 import type { ButtonProps } from '@/components/Button'
 import Icon from '@/components/Icon'
@@ -80,7 +79,6 @@ export default defineComponent({
     const sourceValue = ref(props.value || '')
     const { prefixCls } = useDesign('cropper-avatar')
     const [register, { openModal, closeModal }] = useModal()
-    const { createMessage } = useMessage()
     const { t } = useI18n()
 
     const getClass = computed(() => [prefixCls])
@@ -114,7 +112,7 @@ export default defineComponent({
     function handleUploadSuccess({ source }) {
       sourceValue.value = source
       emit('change', source)
-      createMessage.success(t('component.cropper.uploadSuccess'))
+      // createMessage.success(t('component.cropper.uploadSuccess'))
     }
 
     expose({ openModal: openModal.bind(null, true), closeModal })

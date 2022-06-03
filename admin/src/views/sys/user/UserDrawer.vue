@@ -24,7 +24,7 @@
 </template>
 <script lang="ts" setup name="UserDrawer">
 import { CropperAvatar } from '@/components/Cropper'
-import { ref, computed, unref } from 'vue'
+import { computed, ref, unref } from 'vue'
 import { BasicForm, useForm } from '@/components/Form/index'
 import { BasicDrawer, useDrawerInner } from '@/components/Drawer'
 import { formSchema } from './user.data'
@@ -52,14 +52,17 @@ const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
 
 const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(
   async (data) => {
-    resetFields()
+    await resetFields()
     setDrawerProps({ confirmLoading: false })
 
     isUpdate.value = !!data?.isUpdate
 
     if (unref(isUpdate)) {
       const user = await getUser(data.record.id)
-      setFieldsValue({
+      if (user.departIds) {
+        user.departIds = user.departIds.toString().split(',').map(Number)
+      }
+      await setFieldsValue({
         ...user,
       })
     }
@@ -72,7 +75,11 @@ async function handleSubmit() {
   try {
     const values = await validate()
     setDrawerProps({ confirmLoading: true })
-    console.log(values)
+    delete values.avatar
+    if (values.departIds) {
+      values.departIds = values.departIds.join(',')
+    }
+
     if (isUpdate.value) {
       editUser(values).then(async () => {
         if (userStore.getUserInfo?.id == values.id) {
@@ -102,6 +109,7 @@ const changAvatar = async (id: number) => {
   if (userStore.getUserInfo?.id == id) {
     await useUserStore().getUserInfoAction()
   }
-  console.log('上传完成')
+  createMessage.success('上传成功')
+  emit('success')
 }
 </script>

@@ -1,21 +1,26 @@
 <template>
-  <div>
+  <PageWrapper
+    dense
+    contentFullHeight
+    contentClass="flex flex-col lg:flex-row h-full p-4"
+  >
     <BasicTable @register="registerTable" @fetch-success="onFetchSuccess">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增菜单 </a-button>
+        <a-button type="primary" @click="handleCreate"> 新增菜单</a-button>
       </template>
       <template #action="{ record }">
         <TableAction
           :actions="[
             {
-              icon: 'clarity:note-edit-line',
-              tooltip: '编辑',
-              onClick: handleEdit.bind(null, record),
-            },
-            {
               icon: 'ant-design:plus-outlined',
               tooltip: '增加下级',
               onClick: handleAddSub.bind(null, record),
+              ifShow: record.menuType !== MenuType.BUTTON,
+            },
+            {
+              icon: 'clarity:note-edit-line',
+              tooltip: '编辑',
+              onClick: handleEdit.bind(null, record),
             },
             {
               icon: 'ant-design:delete-outlined',
@@ -32,33 +37,35 @@
       </template>
     </BasicTable>
     <MenuDrawer @register="registerDrawer" @success="handleSuccess" />
-  </div>
+  </PageWrapper>
 </template>
 <script lang="ts" setup name="Menu">
-import type { Ref } from 'vue'
-import { nextTick, ref } from 'vue'
-import { BasicTable, useTable, TableAction } from '@/components/Table'
+import { ref } from 'vue'
+import { PageWrapper } from '@/components/Page'
+import { BasicTable, TableAction, useTable } from '@/components/Table'
 import MenuDrawer from './MenuDrawer.vue'
 
 import {
-  getMenuList,
-  delMenu,
   checkMenuHasChildren,
+  delMenu,
+  getMenuList,
 } from '@admin/service/modules/sys/menu'
 
+import { MenuType } from '@admin/tokens'
 import {
   GetMenuListResultModel,
   MenuParams,
 } from '@admin/service/modules/model/sys/menu'
 
-import { columns, searchFormSchema, filter } from './menu.data'
+import { columns, filter, searchFormSchema } from './menu.data'
 
 import { useDrawer } from '@/components/Drawer'
 
 import { useMessage } from '@/hooks/web/useMessage'
-const { notification, createConfirm } = useMessage()
 
-const params: Ref<MenuParams> = ref({})
+const { createConfirm } = useMessage()
+
+const params = ref<MenuParams>({})
 
 const afterFetch = (v: GetMenuListResultModel) => {
   if (params.value.title || params.value.status) {
@@ -75,7 +82,7 @@ const beforeFetch = (v: MenuParams) => {
 }
 
 const [registerDrawer, { openDrawer }] = useDrawer()
-const [registerTable, { reload, expandAll }] = useTable({
+const [registerTable, { reload }] = useTable({
   title: '菜单列表',
   api: getMenuList,
   columns,
@@ -83,6 +90,7 @@ const [registerTable, { reload, expandAll }] = useTable({
     labelWidth: 120,
     schemas: searchFormSchema,
   },
+  searchInfo: params,
   afterFetch,
   beforeFetch,
   isTreeTable: true,
@@ -94,7 +102,8 @@ const [registerTable, { reload, expandAll }] = useTable({
   showIndexColumn: false,
   canResize: false,
   actionColumn: {
-    width: 110,
+    width: 120,
+    align: 'right',
     title: '操作',
     dataIndex: 'action',
     slots: { customRender: 'action' },
@@ -135,9 +144,7 @@ const handleEdit = (record: Recordable) => {
  * 点击删除后操作
  */
 const handleDelete = (record: Recordable) => {
-  console.log(record)
   checkMenuHasChildren(record.id).then((v) => {
-    console.log(v)
     if (v) {
       createConfirm({
         title: () => '提示',
@@ -153,11 +160,6 @@ const handleDelete = (record: Recordable) => {
       })
     } else {
       delMenu(record.id).then(() => {
-        notification.success({
-          message: '提示',
-          description: `删除成功`,
-          duration: 3,
-        })
         reload()
       })
     }
@@ -169,11 +171,6 @@ const handleDelete = (record: Recordable) => {
  */
 const handleSuccess = () => {
   reload()
-  notification.success({
-    message: '提示',
-    description: `操作成功`,
-    duration: 3,
-  })
 }
 
 /**
@@ -181,7 +178,7 @@ const handleSuccess = () => {
  */
 const onFetchSuccess = () => {
   // 演示默认展开所有表项
-  nextTick(expandAll)
+  // nextTick(expandAll)
 }
 </script>
 <style lang="less"></style>

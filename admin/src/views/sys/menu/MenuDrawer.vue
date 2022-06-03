@@ -13,16 +13,17 @@
           @change="selectApiChange"
           mode="multiple"
           v-model:value="selectUrlIndex"
+          :filterOption="selectFilter"
         >
           <SelectOption
             v-for="(item, index) in allUrl"
-            :key="index"
+            :key="'' + item.method + ';' + item.url + ';' + item.description"
             :value="index"
           >
             <Tooltip>
               <template #title>{{ item.url }}</template>
               <div class="inline-block w-16">
-                <Tag :color="getColor(item.method)"> {{ item.method }} </Tag>
+                <Tag :color="getColor(item.method)"> {{ item.method }}</Tag>
               </div>
               {{ item.description === '' ? item.url : item.description }}
             </Tooltip>
@@ -41,8 +42,8 @@ import { formSchema } from './menu.data'
 import {
   addMenu,
   editMenu,
-  getMenuList,
   getAllUrl,
+  getMenuList,
   getUrlList,
 } from '@service/sys/menu'
 import { Select, SelectOption, Tag, Tooltip } from 'ant-design-vue'
@@ -69,13 +70,16 @@ const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] =
 
 const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(
   async (data: any) => {
-    console.log(data?.parentId)
-    resetFields()
+    await resetFields()
     setDrawerProps({ confirmLoading: false })
     isUpdate.value = !!data?.isUpdate
+    selectUrlIndex.value = []
+    // 获取所有可配置url
     await getAllUrl().then(async (AllUrl) => {
       allUrl.value = AllUrl
+      // 如果类型是按钮
       if (data?.record?.menuType && data.record.menuType === MenuType.BUTTON) {
+        // 获取已有权限
         await getUrlList(data.record.id).then((r) => {
           selectUrl.value = r
           for (let i = 0; i < r.length; i++) {
@@ -92,7 +96,7 @@ const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(
       }
     })
     if (unref(isUpdate)) {
-      setFieldsValue({
+      await setFieldsValue({
         ...data.record,
       })
     }
@@ -103,19 +107,22 @@ const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(
       id: 0,
       parentId: 0,
       title: '根目录',
-      showTitle: '根目录',
       orderNo: 0,
     })
-    updateSchema({
+    await updateSchema({
       field: 'parentId',
       componentProps: { treeData },
     })
 
     if (data?.parentId) {
-      setFieldsValue({ parentId: data?.parentId })
+      await setFieldsValue({ parentId: data?.parentId })
     }
   },
 )
+
+const selectFilter = (inputValue, option) => {
+  return option.key.indexOf(inputValue) != -1
+}
 
 const getTitle = computed(() => (!unref(isUpdate) ? '新增菜单' : '编辑菜单'))
 
@@ -133,7 +140,6 @@ const getColor = (mounted) => {
 }
 
 const selectApiChange = (indexs: number[]) => {
-  console.log(indexs)
   selectUrl.value = []
   for (let i = 0; i < indexs.length; i++) {
     selectUrl.value.push(allUrl.value[indexs[i]])
@@ -144,8 +150,10 @@ async function handleSubmit() {
   try {
     const values = await validate()
     setDrawerProps({ confirmLoading: true })
-    if (unref(isUpdate)) {
+    if (values.menuType === MenuType.BUTTON) {
       values.permissionUrl = selectUrl.value
+    }
+    if (unref(isUpdate)) {
       editMenu(values).then(() => {
         emit('success')
       })

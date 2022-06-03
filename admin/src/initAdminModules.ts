@@ -44,6 +44,7 @@ const initService = async () => {
       return userStore.getToken
     },
     errorFunction: createMessage.error,
+    successFunction: createMessage.success,
     errorModalFunction: createErrorModal,
     errorLogFunction: (error) => {
       const errorLogStore = useErrorLogStoreWithOut()

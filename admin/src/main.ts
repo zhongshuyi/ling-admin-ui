@@ -46,16 +46,6 @@ const bootstrap = async () => {
   await router.isReady()
 
   app.mount('#app')
-
-  // When closing MOCK, Tree Shaking `mockjs` dep
-  // 在关闭 MOCK 的时候, Tree Shaking `mockjs` 依赖
-  if (__VITE_USE_MOCK__) {
-    import('../mock/_createProductionServer').then(
-      ({ setupProdMockServer }) => {
-        setupProdMockServer()
-      },
-    )
-  }
 }
 
 bootstrap()

@@ -1,4 +1,4 @@
-import { BooleanValueEnum, MenuTypeEnum, Status } from 'tokens'
+import { BooleanValueEnum, MenuType, Status } from 'tokens'
 
 export interface RouteItem {
   path: string
@@ -39,7 +39,7 @@ export type Menu = {
   hideTab?: BooleanValueEnum
   hideMenu?: BooleanValueEnum
   isLink?: BooleanValueEnum
-  menuType?: MenuTypeEnum
+  menuType?: MenuType
   remark?: string
   status?: Status
   isFrame?: BooleanValueEnum
@@ -61,7 +61,6 @@ export type Params = {
   name: string
   parentId: number
   children?: Params[]
-  showName?: string
 }
 
 export type PermissionUrl = {

@@ -7,12 +7,12 @@ import { useUserStore } from '@/store/user'
 import { useAppStoreWithOut } from '@/store/app'
 import { toRaw } from 'vue'
 import {
-  transformObjToRoute,
   flatMultiLevelRoutes,
+  transformObjToRoute,
 } from '@/router/helper/routeHelper'
 import { transformRouteToMenu } from '@/router/helper/menuHelper'
 import { projectSetting } from '@admin/setting'
-import { PermissionModeEnum, PageEnum } from '@admin/tokens'
+import { PageEnum, PermissionModeEnum } from '@admin/tokens'
 import { asyncRoutes } from '@/router/routes'
 import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic'
 import { filterTree } from '@admin/utils'
@@ -23,7 +23,7 @@ import { useMessage } from '@/hooks/web/useMessage'
 interface PermissionState {
   // Permission code list
   permCodeList: string[] | number[]
-  // Whether the route has been dynamically added
+  // 是否动态添加路由
   isDynamicAddedRoute: boolean
   // To trigger a menu update
   lastBuildMenuTime: number
@@ -31,6 +31,7 @@ interface PermissionState {
   backMenuList: Menu[]
   frontMenuList: Menu[]
 }
+
 export const usePermissionStore = defineStore({
   id: 'app-permission',
   state: (): PermissionState => ({
@@ -122,6 +123,7 @@ export const usePermissionStore = defineStore({
         if (!routes || routes.length === 0) return
         let homePath: string =
           userStore.getUserInfo.homePath || PageEnum.BASE_HOME
+
         function patcher(routes: RouteRecordItem[], parentPath = '') {
           if (parentPath) parentPath = parentPath + '/'
           routes.forEach((route: RouteRecordItem) => {
@@ -138,6 +140,7 @@ export const usePermissionStore = defineStore({
             children && children.length > 0 && patcher(children, currentPath)
           })
         }
+
         try {
           patcher(routes)
         } catch (e) {

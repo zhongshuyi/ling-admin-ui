@@ -18,11 +18,11 @@
         <Icon icon="ion:ellipsis-vertical" />
         <template #overlay>
           <Menu>
-            <MenuItem @click="expandAll"> 展开全部 </MenuItem>
-            <MenuItem @click="closeAll"> 合并全部 </MenuItem>
+            <MenuItem @click="expandAll"> 展开全部</MenuItem>
+            <MenuItem @click="closeAll"> 合并全部</MenuItem>
             <MenuDivider />
-            <MenuItem @click="checkALL"> 选择全部 </MenuItem>
-            <MenuItem @click="cancelCheckALL"> 取消全选 </MenuItem>
+            <MenuItem @click="checkALL"> 选择全部</MenuItem>
+            <MenuItem @click="cancelCheckALL"> 取消全选</MenuItem>
           </Menu>
         </template>
       </Dropdown>
@@ -34,19 +34,18 @@
       :checkedKeys="checkedKeys"
       ref="permTreeRef"
       :treeData="treeData"
-      :fieldNames="{ key: 'id', title: 'showName' }"
+      :fieldNames="{ key: 'id', title: 'name' }"
       @check="onCheck"
     />
   </BasicDrawer>
 </template>
-<script lang="ts" setup name="RoleDrawer">
+<script lang="ts" setup name="RolePermTree">
 import { onMounted, ref, unref } from 'vue'
 
 import { BasicDrawer, useDrawerInner } from '@/components/Drawer'
 import { Icon } from '@/components/Icon'
-import { BasicTree, TreeItem, TreeActionType } from '@/components/Tree'
-import { Dropdown, Menu, MenuItem, MenuDivider } from 'ant-design-vue'
-import { useI18n } from '@admin/locale/src/useI18n'
+import { BasicTree, TreeActionType, TreeItem } from '@/components/Tree'
+import { Dropdown, Menu, MenuDivider, MenuItem } from 'ant-design-vue'
 import { getPerm } from '@service/sys/menu'
 import { getPermIds, setPermIds } from '@service/sys/role'
 import { Params } from '@service/model/sys/menu'
@@ -83,18 +82,16 @@ const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(
  * 加载树结构数据
  */
 function fetch() {
-  const { t } = useI18n()
-  /**多语言翻译并做节点操作 */
-  const setShowTitle = (v: Params[]) => {
-    if (v === null) return
+  /**结果处理 */
+  const toDealWith = (v: Params[]) => {
+    if (v.length === 0) return
     v.forEach((m) => {
-      m.showName = t(m.name)
       // 保存所有key
       allTreeKeys.value.push(m.id)
       // 判断是否是叶子节点
       if (m.children !== undefined) {
         keyLeafPairs.value.set(m.id, false)
-        setShowTitle(m.children)
+        toDealWith(m.children)
       } else {
         keyLeafPairs.value.set(m.id, true)
       }
@@ -102,7 +99,7 @@ function fetch() {
   }
   /**获取权限树结构 */
   getPerm().then((r) => {
-    setShowTitle(r)
+    toDealWith(r)
     treeData.value = r as unknown as TreeItem[]
   })
 }

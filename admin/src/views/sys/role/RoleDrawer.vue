@@ -12,7 +12,7 @@
   </BasicDrawer>
 </template>
 <script lang="ts" setup name="RoleDrawer">
-import { ref, computed, unref } from 'vue'
+import { computed, ref, unref } from 'vue'
 import { BasicForm, useForm } from '@/components/Form/index'
 import { formSchema } from './role.data'
 import { BasicDrawer, useDrawerInner } from '@/components/Drawer'
@@ -29,13 +29,13 @@ const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
 
 const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(
   async (data) => {
-    resetFields()
+    await resetFields()
     setDrawerProps({ confirmLoading: false })
 
     isUpdate.value = !!data?.isUpdate
 
     if (unref(isUpdate)) {
-      setFieldsValue({
+      await setFieldsValue({
         ...data.record,
       })
     }
@@ -49,9 +49,9 @@ async function handleSubmit() {
     const values = await validate()
     setDrawerProps({ confirmLoading: true })
     if (isUpdate.value) {
-      editRole(values)
+      await editRole(values)
     } else {
-      addRole(values)
+      await addRole(values)
     }
     closeDrawer()
     emit('success')

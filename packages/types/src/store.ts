@@ -33,6 +33,25 @@ export interface RoleInfo {
   value: string
 }
 
+export type Dept = {
+  /**id */
+  id: number
+  /**父级id */
+  parentId?: number
+  /**部门名称 */
+  deptName: string
+  /**父级列表 */
+  parentList?: string
+  /**排序 */
+  orderNum?: number
+  /**负责人 */
+  leader?: string
+  /**电话号码 */
+  phone?: string
+  /**邮箱 */
+  email?: string
+}
+
 export interface UserInfo {
   id: string | number
   username: string
@@ -44,6 +63,8 @@ export interface UserInfo {
   sex: number
   homePath?: string
   roles: RoleInfo[]
+  depts?: Dept[]
+  userIdentity?: number
 }
 
 export interface BeforeMiniState {

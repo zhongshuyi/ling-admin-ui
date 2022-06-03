@@ -1,8 +1,7 @@
 import { h } from 'vue'
 import { Switch } from 'ant-design-vue'
 
-import { BasicColumn } from '@/components/Table'
-import { FormSchema } from '@/components/Table'
+import { BasicColumn, FormSchema } from '@/components/Table'
 
 import { useMessage } from '@/hooks/web/useMessage'
 import { stateChanges } from '@admin/service/modules/sys/role'
@@ -38,21 +37,21 @@ export const columns: BasicColumn[] = [
         checked: r.status === 0,
         checkedChildren: '已启用',
         unCheckedChildren: '已禁用',
-        disabled: r.id === 1,
+        disabled: r.id === Status.DISABLE,
         loading: r.pendingStatus,
         onChange(checked: boolean) {
           r.pendingStatus = true
           const { createMessage } = useMessage()
 
-          const newStatus = checked ? Status.ENABL : Status.DISABLE
+          const newStatus = checked ? Status.ENABLE : Status.DISABLE
 
           stateChanges(r.id, newStatus)
             .then(() => {
               r.status = newStatus
-              createMessage.success(`已成功修改角色状态`)
+              createMessage.success('已成功修改角色状态').then()
             })
             .catch(() => {
-              createMessage.error('修改角色状态失败')
+              createMessage.error('修改角色状态失败').then()
             })
             .finally(() => {
               r.pendingStatus = false
@@ -103,13 +102,23 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
   },
   {
+    field: 'orderNo',
+    label: '排序',
+    component: 'InputNumber',
+    defaultValue: 0,
+    required: true,
+    componentProps: {
+      min: 0,
+    },
+  },
+  {
     field: 'status',
     label: '状态',
     component: 'RadioButtonGroup',
-    defaultValue: Status.ENABL,
+    defaultValue: Status.ENABLE,
     componentProps: {
       options: [
-        { label: '启用', value: Status.ENABL },
+        { label: '启用', value: Status.ENABLE },
         { label: '停用', value: Status.DISABLE },
       ],
     },
