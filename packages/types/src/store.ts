@@ -54,6 +54,7 @@ export type Dept = {
 
 export interface UserInfo {
   id: string | number
+  isAdmin?: boolean
   username: string
   realName: string
   avatar: string

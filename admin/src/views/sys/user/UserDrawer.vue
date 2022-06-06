@@ -38,7 +38,6 @@ import {
   getUser,
 } from '@admin/service/modules/sys/user'
 
-const userStore = useUserStore()
 const { createMessage } = useMessage()
 
 const emit = defineEmits(['success', 'register'])
@@ -72,6 +71,7 @@ const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(
 const getTitle = computed(() => (!unref(isUpdate) ? '新增用户' : '编辑用户'))
 
 async function handleSubmit() {
+  const userStore = useUserStore()
   try {
     const values = await validate()
     setDrawerProps({ confirmLoading: true })
@@ -106,6 +106,7 @@ async function handleSubmit() {
 }
 
 const changAvatar = async (id: number) => {
+  const userStore = useUserStore()
   if (userStore.getUserInfo?.id == id) {
     await useUserStore().getUserInfoAction()
   }

@@ -37,15 +37,13 @@ const [registerForm, { resetFields, setFieldsValue, validate, updateSchema }] =
     showActionButtonGroup: false,
   })
 
-const userInfo = useUserStore().getUserInfo
-
 const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(
   async (data) => {
+    const userInfo = useUserStore().getUserInfo
     await resetFields()
     setDrawerProps({ confirmLoading: false })
     let treeData: Dept[] = []
-    console.log(userInfo)
-    if (userInfo.userIdentity === UserIdentity.SUPERIOR) {
+    if (userInfo.userIdentity === UserIdentity.SUPERIOR || userInfo.isAdmin) {
       treeData = await getManagementDeptList()
     } else if (userInfo.depts && userInfo.depts.length > 1) {
       treeData = userInfo.depts as Dept[]

@@ -108,6 +108,9 @@ export const useUserStore = defineStore({
       }
       // 获取用户信息
       const userInfo = await this.getUserInfoAction()
+      userInfo!.isAdmin =
+        userInfo != null &&
+        userInfo.roles.findIndex((e) => e.value === 'admin') > -1
 
       const sessionTimeout = this.sessionTimeout
       if (sessionTimeout) {

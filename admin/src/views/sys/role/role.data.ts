@@ -34,7 +34,7 @@ export const columns: BasicColumn[] = [
         r.pendingStatus = false
       }
       return h(Switch, {
-        checked: r.status === 0,
+        checked: r.status === Status.ENABLE,
         checkedChildren: '已启用',
         unCheckedChildren: '已禁用',
         disabled: r.id === Status.DISABLE,
@@ -42,9 +42,7 @@ export const columns: BasicColumn[] = [
         onChange(checked: boolean) {
           r.pendingStatus = true
           const { createMessage } = useMessage()
-
           const newStatus = checked ? Status.ENABLE : Status.DISABLE
-
           stateChanges(r.id, newStatus)
             .then(() => {
               r.status = newStatus
